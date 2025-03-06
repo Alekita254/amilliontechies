@@ -1,56 +1,44 @@
+import React from "react";
 import { Radar } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface SponsorProps {
   icon: JSX.Element;
   name: string;
+  link: string;
 }
 
 const sponsors: SponsorProps[] = [
-  {
-    icon: <Radar size={34} />,
-    name: "Sponsor 1",
-  },
-  {
-    icon: <Radar size={34} />,
-    name: "Sponsor 2",
-  },
-  {
-    icon: <Radar size={34} />,
-    name: "Sponsor 3",
-  },
-  {
-    icon: <Radar size={34} />,
-    name: "Sponsor 4",
-  },
-  {
-    icon: <Radar size={34} />,
-    name: "Sponsor 5",
-  },
-  {
-    icon: <Radar size={34} />,
-    name: "Sponsor 6",
-  },
+  { icon: <Radar size={34} />, name: "Sponsor 1", link: "https://sponsor1.com" },
+  { icon: <Radar size={34} />, name: "Sponsor 2", link: "https://sponsor2.com" },
+  { icon: <Radar size={34} />, name: "Sponsor 3", link: "https://sponsor3.com" },
+  { icon: <Radar size={34} />, name: "Sponsor 4", link: "https://sponsor4.com" },
+  { icon: <Radar size={34} />, name: "Sponsor 5", link: "https://sponsor5.com" },
+  { icon: <Radar size={34} />, name: "Sponsor 6", link: "https://sponsor6.com" },
 ];
 
 export const Sponsors = () => {
   return (
-    <section
-      id="sponsors"
-      className="container pt-24 sm:py-32"
-    >
+    <section id="sponsors" className="container pt-24 sm:py-32">
       <h2 className="text-center text-md lg:text-xl font-bold mb-8 text-primary">
-        Investors and founders
+        Investors and Founders
       </h2>
-
-      <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
-        {sponsors.map(({ icon, name }: SponsorProps) => (
-          <div
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center">
+        {sponsors.map(({ icon, name, link }, index) => (
+          <motion.a
             key={name}
-            className="flex items-center gap-1 text-muted-foreground/60"
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center justify-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow-md transition-all duration-300 hover:shadow-2xl hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            whileHover={{ scale: 1.08, y: -3 }}
           >
-            <span>{icon}</span>
-            <h3 className="text-xl  font-bold">{name}</h3>
-          </div>
+            <div className="mb-2 text-primary">{icon}</div>
+            <h3 className="text-md font-bold text-gray-800 dark:text-white">{name}</h3>
+          </motion.a>
         ))}
       </div>
     </section>

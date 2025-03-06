@@ -26,7 +26,7 @@ export const HeroCards = () => {
         <div className="relative aspect-square bg-gradient-to-r from-indigo-50 to-purple-50 rounded-3xl p-8 shadow-xl">
           <div className="absolute inset-0 rounded-3xl border-2 border-indigo-50/50" />
           <img
-            src="/amilliontechies.svg"
+            src="/amilli.svg"
             alt="Illustration for A Million Techies"
             className="w-full h-full object-contain"
           />
