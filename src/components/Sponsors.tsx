@@ -1,4 +1,3 @@
-import React from "react";
 import { Radar } from "lucide-react";
 import { motion } from "framer-motion";
 
