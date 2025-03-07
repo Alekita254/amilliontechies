@@ -162,10 +162,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
-import { ModeToggle } from "./mode-toggle";
 import { LogoIcon } from "./Icons";
 
 interface RouteProps {
@@ -203,7 +201,6 @@ export const Navbar = () => {
 
           {/* Mobile Menu */}
           <span className="flex md:hidden">
-            <ModeToggle />
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger className="px-2">
                 <Menu className="h-5 w-5" onClick={() => setIsOpen(true)} />
