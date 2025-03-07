@@ -13,36 +13,50 @@ interface FAQProps {
 
 const FAQList: FAQProps[] = [
   {
-    question: "Is this template free?",
-    answer: "Yes. It is a free ChadcnUI template.",
+    question: "What is A Million Techies?",
+    answer:
+      "A Million Techies is a global tech community that connects developers, designers, and entrepreneurs to share knowledge, opportunities, and resources.",
     value: "item-1",
   },
   {
-    question: "Lorem ipsum dolor sit amet consectetur adipisicing elit?",
+    question: "How can I join the community?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.",
+      "You can join by subscribing to our newsletter, following us on social media, and participating in our events and discussions.",
     value: "item-2",
   },
   {
-    question:
-      "Lorem ipsum dolor sit amet  Consectetur natus dolores minus quibusdam?",
+    question: "Is A Million Techies free to join?",
     answer:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore qui nostrum reiciendis veritatis necessitatibus maxime quis ipsa vitae cumque quo?",
+      "Yes! Our community is open to everyone. We provide free access to resources, events, and networking opportunities.",
     value: "item-3",
   },
   {
-    question: "Lorem ipsum dolor sit amet, consectetur adipisicing elit?",
-    answer: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
+    question: "Do you offer mentorship programs?",
+    answer:
+      "Yes, we connect experienced professionals with those looking to grow their careers in tech through mentorship sessions and discussions.",
     value: "item-4",
   },
   {
-    question:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur natus?",
+    question: "How can I contribute or collaborate?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.",
+      "You can contribute by sharing knowledge, writing articles, hosting events, or volunteering in our initiatives. Reach out to us to get involved!",
     value: "item-5",
   },
+  {
+    question: "Are there job opportunities available?",
+    answer:
+      "Yes, we regularly share job openings, internships, and freelance gigs from partner companies and community members.",
+    value: "item-6",
+  },
+  {
+    question: "How often do you host events?",
+    answer:
+      "We organize virtual and in-person events regularly, including hackathons, webinars, and networking sessions. Stay tuned for updates!",
+    value: "item-7",
+  },
 ];
+
+
 
 export const FAQ = () => {
   return (
