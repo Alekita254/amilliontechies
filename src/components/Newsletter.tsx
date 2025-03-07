@@ -2,21 +2,28 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { MailCheck, Loader2 } from "lucide-react";
+import { apiPostRequest } from "../backend/functions";
 
 export const Newsletter = () => {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      const response = await apiPostRequest("newsletter/", { email });
+      console.log("Success:", response);
       setSubscribed(true);
+    } catch (error) {
+      console.error("Subscription failed:", error);
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
+
 
   return (
     <section id="newsletter">
