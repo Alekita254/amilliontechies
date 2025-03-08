@@ -1,35 +1,82 @@
-import { About } from "./components/About";
-import { FAQ } from "./components/FAQ";
-import { Features } from "./components/Features";
-import { Footer } from "./components/Footer";
-import { Hero } from "./components/Hero";
-import { HowItWorks } from "./components/HowItWorks";
+import "./App.css"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "sonner"; // Import Sonner for notifications
 import { Navbar } from "./components/Navbar";
-import { Newsletter } from "./components/Newsletter";
+import { Footer } from "./components/Footer";
 import { ScrollToTop } from "./components/ScrollToTop";
-import { Services } from "./components/Services";
-import { Sponsors } from "./components/Sponsors";
-import "./App.css";
 
-function App() {
+// Import pages
+import { Home } from "./pages/Home";
+import { Contact } from "./pages/Contact";
+import { AboutPage } from "./pages/AboutPage";
+import { ServicesPage } from "./pages/ServicesPage";
+import { NotFound } from "./pages/NotFound";
+
+// Layout Component for pages with navbar & footer
+const Layout = ({ children }) => {
   return (
     <>
       <Navbar />
-      <Hero />
-      <Sponsors />
-      <About />
-      <HowItWorks />
-      <Features />
-      <Services />
-      {/* <Cta />
-      <Testimonials />
-      <Team />
-      <Pricing /> */}
-      <Newsletter />
-      <FAQ />
+      {children}
       <Footer />
       <ScrollToTop />
     </>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      {/* Sonner Toaster (Global Notification Provider) */}
+      <Toaster position="top-right" richColors />
+      
+      <Routes>
+        {/* Home Page with Layout */}
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <Home />
+            </Layout>
+          }
+        />
+
+        {/* About Page with Layout */}
+        <Route
+          path="/about"
+          element={
+            <Layout>
+              <AboutPage />
+            </Layout>
+          }
+        />
+
+        {/* Services Page with Layout */}
+        <Route
+          path="/services"
+          element={
+            <Layout>
+              <ServicesPage />
+            </Layout>
+          }
+        />
+
+        {/* Contact Page with Custom Layout (e.g., No Footer) */}
+        <Route
+          path="/contact"
+          element={
+            <>
+              <Navbar />
+              <Contact />
+              <ScrollToTop />
+            </>
+          }
+        />
+
+        {/* 404 Page */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 }
 
