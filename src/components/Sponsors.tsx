@@ -8,11 +8,11 @@ interface SponsorProps {
 }
 
 const sponsors: SponsorProps[] = [
-  { icon: <Radar size={34} />, name: "Sponsor 1", link: "https://sponsor1.com" },
-  { icon: <Radar size={34} />, name: "Sponsor 2", link: "https://sponsor2.com" },
-  { icon: <Radar size={34} />, name: "Sponsor 3", link: "https://sponsor3.com" },
-  { icon: <Radar size={34} />, name: "Sponsor 4", link: "https://sponsor4.com" },
-  { icon: <Radar size={34} />, name: "Sponsor 5", link: "https://sponsor5.com" },
+  { icon: <Radar size={34} />, name: "Geto Global Technologies", link: "https://getotech.co.ke" },
+  { icon: <Radar size={34} />, name: "Geto Global Technologies", link: "https://getotech.co.ke" },
+  { icon: <Radar size={34} />, name: "Geto Global Technologies", link: "https://getotech.co.ke" },
+  { icon: <Radar size={34} />, name: "Geto Global Technologies", link: "https://getotech.co.ke" },
+  { icon: <Radar size={34} />, name: "Geto Global Technologies", link: "https://getotech.co.ke" },
 ];
 
 export const Sponsors = () => {
