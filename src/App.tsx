@@ -12,6 +12,7 @@ import { AboutPage } from "./pages/AboutPage";
 import { ServicesPage } from "./pages/ServicesPage";
 import { NotFound } from "./pages/NotFound";
 import { BlogPage } from "./pages/BlogPage";
+import { BlogDetail } from "./pages/blog/BlogDetail";
 
 // Layout Component for pages with navbar & footer
 const Layout = ({ children }) => {
@@ -85,6 +86,16 @@ function App() {
             </>
           }
         />
+
+        <Route 
+          path="/blog/:slug" 
+          element={
+            <Layout>
+              <BlogDetail />
+            </Layout>
+          } 
+        />
+
 
         {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
