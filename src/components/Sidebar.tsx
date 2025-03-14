@@ -1,20 +1,3 @@
-// const Sidebar = () => {
-//     return (
-//       <aside className="w-full md:w-1/3 bg-white shadow-md rounded-lg p-4">
-//         <h3 className="text-xl font-semibold mb-4">Popular Posts</h3>
-//         <ul className="space-y-3">
-//           <li className="text-blue-500 hover:underline cursor-pointer">
-//             How AI is Changing Web Development
-//           </li>
-//           <li className="text-blue-500 hover:underline cursor-pointer">
-//             Mastering Tailwind CSS in 2025
-//           </li>
-//         </ul>
-//       </aside>
-//     );
-//   };
-  
-//   export default Sidebar;
   
 interface SidebarProps {
     content: {
@@ -25,7 +8,7 @@ interface SidebarProps {
   
   const Sidebar = ({ content }: SidebarProps) => {
     return (
-      <aside className="w-full md:w-1/3 bg-white shadow-md rounded-lg p-4">
+      <aside className="w-full bg-white shadow-md rounded-lg p-4">
         {/* Popular Posts */}
         <h3 className="text-xl font-semibold mb-4">Popular Posts</h3>
         <ul className="space-y-3">
