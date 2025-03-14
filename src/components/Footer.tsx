@@ -29,7 +29,7 @@ export const Footer = () => {
         {/* Learning Resources */}
         <div className="flex flex-col gap-2">
           <h3 className="font-bold text-lg">Resources</h3>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Blogs</a>
+          <a rel="noreferrer noopener" href="/blog" className="opacity-60 hover:opacity-100">Blogs</a>
           <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Courses</a>
           <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Workshops</a>
         </div>

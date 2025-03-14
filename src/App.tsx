@@ -11,6 +11,7 @@ import { Contact } from "./pages/Contact";
 import { AboutPage } from "./pages/AboutPage";
 import { ServicesPage } from "./pages/ServicesPage";
 import { NotFound } from "./pages/NotFound";
+import { BlogPage } from "./pages/BlogPage";
 
 // Layout Component for pages with navbar & footer
 const Layout = ({ children }) => {
@@ -68,6 +69,18 @@ function App() {
             <>
               <Navbar />
               <Contact />
+              <ScrollToTop />
+            </>
+          }
+        />
+
+        <Route
+          path="/blog"
+          element={
+            <>
+              <Navbar />
+              <BlogPage />
+              < Footer />
               <ScrollToTop />
             </>
           }
