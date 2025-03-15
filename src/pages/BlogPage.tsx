@@ -3,41 +3,30 @@ import BlogList from "@/components/BlogList";
 import Sidebar from "@/components/Sidebar";
 import BlogLayout from "@/components/BlogLayout";
 
-const blogData = {
-    categories: ["Technology", "AI", "Web Development", "Cybersecurity"],
-    blogs: [
-      {
-        id: 1,
-        title: "The Rise of AI in Web Development",
-        description: "How AI is shaping the future of web development.",
-        image: "/images/image1.jpeg",
-        category: "AI",
-      },
-      {
-        id: 2,
-        title: "Mastering Tailwind CSS",
-        description: "A deep dive into Tailwind CSS for modern UI design.",
-        image: "/images/image2.jpeg",
-        category: "Web Development",
-      },
-      {
-        id: 3,
-        title: "Understanding Cybersecurity in 2025",
-        description: "Key trends in cybersecurity and how to stay protected.",
-        image: "/images/image3.jpeg",
-        category: "Cybersecurity",
-      },
-    ],
-    sidebarContent: {
-      popularPosts: [
-        { id: 1, title: "React Performance Optimization", link: "#" },
-        { id: 2, title: "Understanding Next.js 14 Features", link: "#" },
-      ],
-      tags: ["React", "Next.js", "Vite", "JavaScript", "CSS"],
-    },
-  };
+import { useEffect, useState } from "react";
+import { apiGetRequest } from "@/backend/functions";
 
 export const BlogPage = () => {
+  const [blogData, setBlogData] = useState<{ blogs: any[]; categories: any[]; sidebarContent: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogData  = async () => {
+      const { message, data } = await apiGetRequest("blog-data/");
+      console.log("The API response is: ", message, data);
+      setBlogData(data) || { blogs: [], categories: [], sidebarContent: "" };
+      setLoading(false); 
+    };
+
+    fetchBlogData();
+
+  }, [])
+
+
+  if (loading) {
+    return <BlogLayout>Loading...</BlogLayout>;
+  }
+
   return (
     <BlogLayout>
       <BlogHeroSection />
