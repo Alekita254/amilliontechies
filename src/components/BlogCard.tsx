@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 interface BlogCardProps {
@@ -6,10 +7,17 @@ interface BlogCardProps {
     title: string;
     description: string;
     image: string;
+    slug: string;
   };
 }
 
 const BlogCard = ({ blog }: BlogCardProps) => {
+  const navigate = useNavigate();
+
+  const handleReadMore = () => {
+    navigate(`/blog/${blog.slug}`);
+  };
+
   return (
     <div className="bg-white shadow-lg rounded-xl overflow-hidden">
       <img
@@ -22,7 +30,7 @@ const BlogCard = ({ blog }: BlogCardProps) => {
       <div className="p-4">
         <h3 className="text-lg font-bold">{blog.title}</h3>
         <p className="text-gray-600 mt-2">{blog.description}</p>
-        <Button className="mt-4">Read More</Button>
+        <Button className="mt-4" onClick={handleReadMore}>Read More</Button>
       </div>
     </div>
   );

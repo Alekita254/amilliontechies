@@ -7,6 +7,7 @@ interface BlogListProps {
     description: string;
     image: string;
     category: string;
+    slug: string;
   }[];
   categories: string[];
 }
