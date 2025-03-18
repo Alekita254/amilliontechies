@@ -12,16 +12,17 @@ export const CommunityPage = () => {
   const [communityData, setCommunityData] = useState<{ community: any[]; categories: any[]; sidebarContent: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
+ 
   useEffect(() => {
-    const fetchCommunityData  = async () => {
-      const { message, data } = await apiGetRequest("community-data/");
-      setCommunityData(data) || { community: [], categories: [], sidebarContent: "" };
-      setLoading(false); 
+    const fetchCommunityData = async () => {
+        const { message, data } = await apiGetRequest("community-data/");
+        setCommunityData(data ?? { community: [], categories: [], sidebarContent: "" }); // Use nullish coalescing
+        setLoading(false); 
     };
 
     fetchCommunityData();
+}, []);
 
-  }, [])
 
 
   if (loading) {

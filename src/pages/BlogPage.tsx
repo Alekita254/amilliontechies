@@ -11,16 +11,19 @@ export const BlogPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBlogData  = async () => {
+    const fetchBlogData = async () => {
       const { message, data } = await apiGetRequest("blog-data/");
       console.log("The API response is: ", message, data);
-      setBlogData(data) || { blogs: [], categories: [], sidebarContent: "" };
+  
+      // Ensure data is always valid
+      setBlogData(data ?? { blogs: [], categories: [], sidebarContent: "" });
+      
       setLoading(false); 
     };
-
+  
     fetchBlogData();
-
-  }, [])
+  }, []);
+  
 
 
   if (loading) {
@@ -34,7 +37,12 @@ export const BlogPage = () => {
         <div className="md:col-span-2">
         <BlogList blogs={blogData?.blogs || []} categories={blogData?.categories || []} />
         </div>
-        <Sidebar content={blogData.sidebarContent} />
+        {/* <Sidebar content={blogData.sidebarContent} /> */}
+        <Sidebar 
+          content={typeof blogData.sidebarContent === "string" ? 
+            { popularPosts: [], tags: [] } : 
+            blogData.sidebarContent} 
+        />
       </div>
     </BlogLayout>
   );

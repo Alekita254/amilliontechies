@@ -9,8 +9,10 @@ interface Comment {
     created_at: string;
     likes: number;
     dislikes: number;
+    parent: number | null; 
     replies: Comment[];
-}
+    comments?: Comment[];
+  }
 
 const CommentItem = ({ comment, onLike, onDislike, onReply }) => {
     const [replyInput, setReplyInput] = useState("");
@@ -92,37 +94,52 @@ const BlogComments = ({ postId }: { postId: number }) => {
     const [text, setText] = useState("");
     const [isAddingComment, setIsAddingComment] = useState(true);
 
-    // Fetch comments from the backend API
+  
     // const fetchComments = useCallback(async () => {
     //     try {
     //         const response = await apiGetRequest(`comments/blog/${postId}/`);
     //         if (response.data) {
-    //             // Ensure comments is always an array
     //             const commentsData = Array.isArray(response.data.data) ? response.data.data : [response.data.data];
-    //             setComments(commentsData);
+                
+    //             // Ensure `replies` is always an array
+    //             const formattedComments = commentsData.map(comment => ({
+    //                 ...comment,
+    //                 replies: Array.isArray(comment.replies) ? comment.replies : [],
+    //             }));
+    
+    //             setComments(formattedComments);
     //         }
     //     } catch (error) {
     //         console.error("Failed to fetch comments:", error);
     //     }
     // }, [postId]);
+
     const fetchComments = useCallback(async () => {
         try {
-            const response = await apiGetRequest(`comments/blog/${postId}/`);
-            if (response.data) {
-                const commentsData = Array.isArray(response.data.data) ? response.data.data : [response.data.data];
-                
-                // Ensure `replies` is always an array
-                const formattedComments = commentsData.map(comment => ({
-                    ...comment,
-                    replies: Array.isArray(comment.replies) ? comment.replies : [],
-                }));
-    
-                setComments(formattedComments);
-            }
+          const response = await apiGetRequest(`comments/blog/${postId}/`);
+          if (response.data) {
+            const commentsData = Array.isArray(response.data.data) ? response.data.data : [response.data.data];
+      
+            // Flatten the nested comments into a single array
+            const flattenComments = (comments: Comment[]): Comment[] => {
+              return comments.reduce((acc, comment) => {
+                acc.push(comment);
+                if (comment.replies && comment.replies.length > 0) {
+                  acc.push(...flattenComments(comment.replies));
+                }
+                return acc;
+              }, [] as Comment[]);
+            };
+      
+            const flattenedComments = flattenComments(commentsData);
+            setComments(flattenedComments);
+          }
         } catch (error) {
-            console.error("Failed to fetch comments:", error);
+          console.error("Failed to fetch comments:", error);
         }
-    }, [postId]);
+      }, [postId]);
+
+      
 
     useEffect(() => {
         fetchComments();
@@ -245,7 +262,7 @@ const BlogComments = ({ postId }: { postId: number }) => {
 
             {/* Display Comments */}
             <ul>
-    {comments.length > 0 && comments[0].comments.length > 0 ? (
+    {comments.length > 0 && comments[0]?.comments?.length > 0 ? (
         comments[0].comments
             .filter((comment) => comment.parent === null) // Only display top-level comments
             .map((comment) => (

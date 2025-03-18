@@ -102,7 +102,7 @@ export const Navbar = () => {
                   Get Started
                 </a> */}
                  <div className="hidden flex gap-3">
-                    <ContactPopover > {"      "} </ContactPopover>
+                    <ContactPopover />
                  </div>
               </nav>
             </SheetContent>
