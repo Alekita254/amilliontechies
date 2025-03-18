@@ -1,3 +1,3 @@
-export const API_URL = "http://localhost:5000/api";
+// export const API_URL = "http://localhost:5000/api";
 
-// export const API_URL = "https://milliapi.getotech.co.ke/api";
+export const API_URL = "https://milliapi.getotech.co.ke/api";
