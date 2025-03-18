@@ -4,6 +4,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
 import { LogoIcon } from "./Icons";
+import { ContactPopover } from "./contactPopover";
+
 
 interface RouteProps {
   href: string;
@@ -18,9 +20,9 @@ const coursesList: RouteProps[] = [
 ];
 
 const communityList: RouteProps[] = [
-  { href: "#forums", label: "Forums" },
-  { href: "#discord", label: "Discord" },
-  { href: "#mentorship", label: "Mentorship" },
+  { href: "/community", label: "Forums" },
+  { href: "/community", label: "Discord" },
+  { href: "/community", label: "Mentorship" },
 ];
 
 export const Navbar = () => {
@@ -54,7 +56,7 @@ export const Navbar = () => {
                 <a href="/" className={buttonVariants({ variant: "ghost" })}>
                   Home
                 </a>
-                {/* Courses Dropdown */}
+                {/* Courses Dropdown
                 <details className="w-full">
                   <summary className="cursor-pointer p-2">Courses</summary>
                   <ul className="ml-4 flex flex-col gap-2">
@@ -66,7 +68,7 @@ export const Navbar = () => {
                       </li>
                     ))}
                   </ul>
-                </details>
+                </details> */}
                 {/* Community Dropdown */}
                 <details className="w-full">
                   <summary className="cursor-pointer p-2">Community</summary>
@@ -87,11 +89,21 @@ export const Navbar = () => {
                   Our Blogs
                 </a>
                 <a
+                  href="/community"
+                  className={buttonVariants({ variant: "default" })}
+                >
+                  Community
+                </a>
+              
+                {/* <a
                   href="#get-started"
                   className={buttonVariants({ variant: "default" })}
                 >
                   Get Started
-                </a>
+                </a> */}
+                 <div className="hidden flex gap-3">
+                    <ContactPopover > {"      "} </ContactPopover>
+                 </div>
               </nav>
             </SheetContent>
           </Sheet>
@@ -105,7 +117,7 @@ export const Navbar = () => {
           <a href="/blog" className={buttonVariants({ variant: "ghost" })}>
             Our Blogs
           </a>
-          {/* Courses Dropdown */}
+          {/* Courses Dropdown
           <div className="relative">
             <button
               onClick={() => setIsCoursesOpen(!isCoursesOpen)}
@@ -126,7 +138,7 @@ export const Navbar = () => {
                 ))}
               </div>
             )}
-          </div>
+          </div> */}
           {/* Community Dropdown */}
           <div className="relative">
             <button
@@ -153,12 +165,13 @@ export const Navbar = () => {
 
         {/* Action Buttons */}
         <div className="hidden md:flex gap-3">
-          <a
+          {/* <a
             href="#get-started"
             className={buttonVariants({ variant: "default" })}
           >
             Get Started
-          </a>
+          </a> */}
+          <ContactPopover />
         </div>
       </div>
     </header>

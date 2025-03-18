@@ -13,6 +13,7 @@ import { ServicesPage } from "./pages/ServicesPage";
 import { NotFound } from "./pages/NotFound";
 import { BlogPage } from "./pages/BlogPage";
 import { BlogDetail } from "./pages/blog/BlogDetail";
+import { CommunityPage } from "./pages/Community";
 
 // Layout Component for pages with navbar & footer
 const Layout = ({ children }) => {
@@ -94,6 +95,18 @@ function App() {
               <BlogDetail />
             </Layout>
           } 
+        />
+
+        <Route
+          path="/community"
+          element={
+            <>
+              <Navbar />
+              <CommunityPage />
+              < Footer />
+              <ScrollToTop />
+            </>
+          }
         />
 
 
