@@ -7,6 +7,7 @@ import BlogLayout from "@/components/BlogLayout";
 import { useEffect, useState } from "react";
 import { apiGetRequest } from "@/backend/functions";
 import CommunityHeroSection from "@/components/CommunityHeroSection";
+import CommunityList from "@/components/CommunityList";
 
 export const CommunityPage = () => {
   const [communityData, setCommunityData] = useState<{ community: any[]; categories: any[]; sidebarContent: string } | null>(null);
@@ -77,7 +78,7 @@ export const CommunityPage = () => {
       <CommunityHeroSection/>
       <div className="mt-10 grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2">
-        <BlogList blogs={communityData?.community || []} categories={communityData?.categories || []} />
+        <CommunityList posts={communityData?.community || []} categories={communityData?.categories || []} />
         </div>
         <CommunitySidebar content={communityContent}/>
       </div>    
