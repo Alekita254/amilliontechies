@@ -4,6 +4,32 @@ import { Button } from "@/components/ui/button";
 import { submitJoinUsForm } from '@/backend/functions';
 import { toast } from "sonner";
 
+// Define the shape of your form data
+interface FormData {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone?: string;
+  country?: string;
+  county?: string;
+  area_of_interest?: string;
+  about?: string;
+  contribution?: string;
+  linkedin?: string;
+  heard_from?: string;
+  location?: string;
+}
+
+// Define a type for errors
+interface Errors {
+  [key: string]: string | null;
+}
+
+// Define the props type for JoinForm
+interface JoinFormProps {
+  setThankYou: (message: string) => void;
+}
+
 // Dropdown options
 const countries = ["Kenya", "Uganda", "Tanzania", "Rwanda", "Nigeria", "South Africa"];
 const countiesInKenya = ["Nairobi", "Mombasa", "Kisumu", "Machakos", "Nakuru", "Kiambu", "Meru", "Uasin Gishu"];
@@ -26,37 +52,38 @@ const steps = [
   { label: "How did you hear about us?", name: "heard_from", placeholder: "Select where you heard about us", options: socialMediaOptions },
 ];
 
-export const JoinForm = ({ setThankYou }) => {
-  const [formData, setFormData] = useState({});
-  const [step, setStep] = useState(0);
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track loading state
+export const JoinForm: React.FC<JoinFormProps> = ({ setThankYou }) => {
+  const [formData, setFormData] = useState<FormData>({});
+  const [step, setStep] = useState<number>(0);
+  const [errors, setErrors] = useState<Errors>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    const updatedForm = { ...formData, [name]: value };
+    const updatedForm: FormData = { ...formData, [name]: value };
 
-    // Auto update location
+    // Auto update location using the updatedForm rather than formData to ensure up-to-date values
     if (name === 'country') {
       if (value !== 'Kenya') {
         updatedForm.location = value;
         delete updatedForm.county;
-      } else if (formData.county) {
-        updatedForm.location = 'Kenya - ' + formData.county;
+      } else if (updatedForm.county) {
+        updatedForm.location = 'Kenya - ' + updatedForm.county;
       }
     }
 
-    if (name === 'county' && formData.country === 'Kenya') {
+    if (name === 'county' && updatedForm.country === 'Kenya') {
       updatedForm.location = 'Kenya - ' + value;
     }
 
     setFormData(updatedForm);
-    setErrors(prev => ({ ...prev, [name]: null })); // clear error on change
+    setErrors(prev => ({ ...prev, [name]: null })); // Clear error on change
   };
 
   const handleNext = () => {
+    // If country is not Kenya at step 4, skip the county selection
     if (step === 4 && formData.country !== "Kenya") {
-      setStep(step + 2); // skip county
+      setStep(step + 2);
     } else {
       setStep(step + 1);
     }
@@ -64,14 +91,14 @@ export const JoinForm = ({ setThankYou }) => {
 
   const handleBack = () => {
     if (step === 6 && formData.country !== "Kenya") {
-      setStep(step - 2); // skip county
+      setStep(step - 2);
     } else {
       setStep(step - 1);
     }
   };
 
   const handleSubmit = async () => {
-    setIsSubmitting(true); // Set loading state to true
+    setIsSubmitting(true);
     try {
       const response = await submitJoinUsForm(formData);
       if (response.success) {
@@ -91,7 +118,7 @@ export const JoinForm = ({ setThankYou }) => {
       });
       toast.error("There was an error with your submission.");
     } finally {
-      setIsSubmitting(false); // Reset loading state
+      setIsSubmitting(false);
     }
   };
 
