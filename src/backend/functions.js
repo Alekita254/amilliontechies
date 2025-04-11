@@ -51,3 +51,14 @@ export const apiGetRequest = async (endpoint) => {
 
   }
 };
+
+
+export const fetchJoinUsConfig = async () => {
+  const res = await apiGetRequest("joinus/config");
+  return res.data;
+};
+
+
+export const submitJoinUsForm = async (formData) => {
+  return await apiPostRequest("joinus/submit/", formData);
+};

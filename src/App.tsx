@@ -14,6 +14,7 @@ import { NotFound } from "./pages/NotFound";
 import { BlogPage } from "./pages/BlogPage";
 import { BlogDetail } from "./pages/blog/BlogDetail";
 import { CommunityPage } from "./pages/Community";
+import {JoinUsPage} from "./pages/JoinUsPage";
 
 // Layout Component for pages with navbar & footer
 const Layout = ({ children }) => {
@@ -82,6 +83,18 @@ function App() {
             <>
               <Navbar />
               <BlogPage />
+              < Footer />
+              <ScrollToTop />
+            </>
+          }
+        />
+
+        <Route 
+          path="/joinus" 
+          element={
+            <>
+              <Navbar />
+              <JoinUsPage />
               < Footer />
               <ScrollToTop />
             </>

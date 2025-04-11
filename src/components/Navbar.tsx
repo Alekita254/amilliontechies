@@ -94,16 +94,12 @@ export const Navbar = () => {
                 >
                   Community
                 </a>
-              
-                {/* <a
-                  href="#get-started"
+                <a
+                  href="/joinus"
                   className={buttonVariants({ variant: "default" })}
                 >
-                  Get Started
-                </a> */}
-                 <div className="hidden flex gap-3">
-                    <ContactPopover />
-                 </div>
+                  Join Us
+                </a>  
               </nav>
             </SheetContent>
           </Sheet>
@@ -118,27 +114,7 @@ export const Navbar = () => {
             Our Blogs
           </a>
           {/* Courses Dropdown
-          <div className="relative">
-            <button
-              onClick={() => setIsCoursesOpen(!isCoursesOpen)}
-              className={buttonVariants({ variant: "ghost" })}
-            >
-              Courses
-            </button>
-            {isCoursesOpen && (
-              <div className="absolute left-0 top-full mt-2 w-40 bg-white dark:bg-gray-900 shadow-md rounded-md">
-                {coursesList.map(({ href, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    className="block px-4 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-700"
-                  >
-                    {label}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div> */}
+           */}
           {/* Community Dropdown */}
           <div className="relative">
             <button
@@ -161,18 +137,14 @@ export const Navbar = () => {
               </div>
             )}
           </div>
+          <a
+                  href="/joinus"
+                  className={buttonVariants({ variant: "default" })}
+                >
+                  Join Us
+                </a>
         </nav>
 
-        {/* Action Buttons */}
-        <div className="hidden md:flex gap-3">
-          {/* <a
-            href="#get-started"
-            className={buttonVariants({ variant: "default" })}
-          >
-            Get Started
-          </a> */}
-          <ContactPopover />
-        </div>
       </div>
     </header>
   );
