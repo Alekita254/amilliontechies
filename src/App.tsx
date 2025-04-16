@@ -15,6 +15,7 @@ import { BlogPage } from "./pages/BlogPage";
 import { BlogDetail } from "./pages/blog/BlogDetail";
 import { CommunityPage } from "./pages/Community";
 import {JoinUsPage} from "./pages/JoinUsPage";
+import LoginPage from "./pages/login/LoginPage";
 
 // Layout Component for pages with navbar & footer
 const Layout = ({ children }) => {
@@ -110,6 +111,7 @@ function App() {
           } 
         />
 
+
         <Route
           path="/community"
           element={
@@ -120,6 +122,15 @@ function App() {
               <ScrollToTop />
             </>
           }
+        />
+
+<Route 
+          path="/login" 
+          element={
+            // <Layout>
+              <LoginPage />
+            // </Layout>
+          } 
         />
 
 
