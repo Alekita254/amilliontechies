@@ -30,8 +30,15 @@ export default function LoginForm() {
       }
 
       const data = await response.json();
+      const { user, tokens } = data.data;
       console.log('Success:', data);
       // Save token, redirect, etc.
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("accessToken", tokens.access);
+      localStorage.setItem("refreshToken", tokens.refresh);
+
+    // Redirect to /admin
+    window.location.href = "/admin";
 
     } catch (err) {
       setError(err.message || 'Something went wrong');
@@ -214,9 +221,9 @@ export default function LoginForm() {
 
             <div className="mt-6 text-center text-sm text-gray-500">
               Don't have an account?{' '}
-              <a href="#" className="font-medium text-emerald-600 hover:text-emerald-500">
+              {/* <a href="#" className="font-medium text-emerald-600 hover:text-emerald-500">
                 Sign up
-              </a>
+              </a> */}
             </div>
           </CardContent>
         </Card>
