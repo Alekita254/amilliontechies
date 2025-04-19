@@ -62,3 +62,107 @@ export const fetchJoinUsConfig = async () => {
 export const submitJoinUsForm = async (formData) => {
   return await apiPostRequest("joinus/submit/", formData);
 };
+
+
+export const apiFormDataPostRequest = async (endpoint, formData) => {
+  try {
+    const url = `${API_URL}/${endpoint}`;
+    const token = localStorage.getItem("accessToken");
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(JSON.stringify(result));
+    }
+
+    return result;
+  } catch (error) {
+    console.error("API FormData Post Error:", error.message);
+    throw error;
+  }
+};
+
+
+export const apiPatchRequest = async (endpoint, data) => {
+  try {
+    const url = `${API_URL}/${endpoint}`;
+    const token = localStorage.getItem("accessToken");
+
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Update failed");
+    }
+
+    return result;
+  } catch (error) {
+    console.error("API Patch Request Error:", error.message);
+    throw error;
+  }
+};
+
+
+export const apiDeleteRequest = async (endpoint) => {
+  try {
+    const url = `${API_URL}/${endpoint}`;
+    const token = localStorage.getItem("accessToken");
+
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Delete failed");
+    }
+
+    return { success: true, message: "Delete successful" };
+  } catch (error) {
+    console.error("API Delete Request Error:", error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+
+export const apiFormDataPatchRequest = async (endpoint, formData) => {
+  try {
+    const url = `${API_URL}/${endpoint}`;
+    const token = localStorage.getItem("accessToken");
+
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(JSON.stringify(result));
+    }
+
+    return result;
+  } catch (error) {
+    console.error("API FormData Patch Error:", error.message);
+    throw error;
+  }
+};

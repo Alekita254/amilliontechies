@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiGetRequest } from "@/backend/functions";
 import { toast } from "sonner";
 
-type Blog = {
+type Community = {
   id: number;
   title: string;
   category: string;
@@ -18,27 +18,27 @@ type Blog = {
   date: string;
 };
 
-export function BlogTable() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+export function CommunityTable() {
+  const [blogs, setBlogs] = useState<Community[]>([]);
   const [filter, setFilter] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await apiGetRequest("blogs/");
+        const res = await apiGetRequest("community/");
         setBlogs(res.data.data);
       } catch {
-        toast.error("Failed to load blogs");
+        toast.error("Failed to load community data");
       }
     })();
   }, []);
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Delete this blog?")) return;
+    if (!confirm("Delete this community?")) return;
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await fetch(`http://localhost:5000/api/blogs/${id}/`, {
+      const response = await fetch(`http://localhost:5000/api/community/${id}/`, {
         method: "DELETE",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
@@ -50,7 +50,7 @@ export function BlogTable() {
     }
   };
 
-  const columns: ColumnDef<Blog>[] = [
+  const columns: ColumnDef<Community>[] = [
     {
       accessorKey: "title",
       header: "Title",
@@ -92,7 +92,7 @@ export function BlogTable() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/admin/blog/${row.original.slug}/edit`)}
+            onClick={() => navigate(`/admin/community/${row.original.slug}/edit`)}
           >
             Edit
           </Button>
@@ -121,7 +121,7 @@ export function BlogTable() {
     <Card className="mt-6">
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <CardTitle>Blogs</CardTitle>
+          <CardTitle>Communities or Events</CardTitle>
           <Input
             placeholder="Search..."
             value={filter}

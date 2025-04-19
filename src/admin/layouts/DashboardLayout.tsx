@@ -1,6 +1,6 @@
 import { Sidebar } from '../components/Sidebar';
 import { TopNav } from '../components/TopNav';
-import { Outlet } from 'react-router-dom'; // ✅ Add this
+import { Outlet } from 'react-router-dom'; 
 
 export function DashboardLayout() {
   return (
@@ -12,7 +12,7 @@ export function DashboardLayout() {
         
         <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
           <div className="max-w-7xl mx-auto">
-            <Outlet /> {/* ✅ This will render DashboardPage */}
+            <Outlet /> 
           </div>
         </main>
       </div>

@@ -3,6 +3,7 @@ import { BlogSummary } from "../components/BlogSummary";
 import { BlogForm } from "../components/BlogForm";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { BlogTable } from "../components/BlogTable";
 
 export default function BlogPage() {
   const [showForm, setShowForm] = useState(false);
@@ -25,7 +26,8 @@ export default function BlogPage() {
 
       <Separator />
 
-      <BlogSummary data={blogs} />
+      {/* <BlogSummary data={blogs} /> */}
+      <BlogTable />
     </div>
   );
 }

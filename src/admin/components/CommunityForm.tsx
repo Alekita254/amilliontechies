@@ -18,7 +18,7 @@ type Author = {
   bio: string;
 };
 
-export function BlogForm() {
+export function CommunityForm() {
   const [authors, setAuthors] = useState<Author[]>([]);
 
   const [formData, setFormData] = useState({
@@ -87,10 +87,10 @@ export function BlogForm() {
     }
 
     try {
-      const result = await apiFormDataPostRequest("blogs/", formToSend);
-      console.log("Blog posted successfully:", result);
+      const result = await apiFormDataPostRequest("community/", formToSend);
+      console.log("Community Event posted successfully:", result);
     //   alert("Blog posted!");
-      toast.success("Blog published successfully!");
+      toast.success("Community Event published successfully!");
       // reset form if desired…
       setFormData({
         title: "",
@@ -102,9 +102,8 @@ export function BlogForm() {
         cover_image: null,
       });
     } catch (err: any) {
-      console.error("Blog submit error:", err.message);
-      console.log("FormData contents:", formToSend);
-      toast.error(`Failed to publish blog: ${err.message}`);
+      console.error("Community Event submit error:", err.message);
+      toast.error(`Failed to publish a community event: ${err.message}`);
     }
   };
 
@@ -146,7 +145,7 @@ export function BlogForm() {
     <Card className="bg-gray-100 border border-gray-300 rounded-xl shadow-sm">
       <CardHeader>
         <CardTitle className="text-xl font-semibold text-gray-800">
-          📝 Create a New Blog
+          📝 Create a New Community Event
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -246,7 +245,7 @@ export function BlogForm() {
             type="submit"
             className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md"
           >
-            Publish Blog
+            Publish Community Event
           </Button>
         </form>
       </CardContent>
