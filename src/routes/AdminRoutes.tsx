@@ -9,6 +9,8 @@ import { AuthorList } from "@/admin/components/AuthorList";
 import { AuthorForm } from "@/admin/components/AuthorForm";
 import CommunityPage from "@/admin/pages/CommunityPage";
 import { CommunityDetailEdit } from "@/admin/components/CommunityDetailEdit";
+import { ProfilePage } from "@/admin/pages/ProfilePage";
+import { UserProfile } from "@/admin/components/profile";
 
 export function AdminRoutes() {
   return (
@@ -27,6 +29,9 @@ export function AdminRoutes() {
             <Route path="/admin/community" element={<CommunityPage />} />
             <Route path="/admin/community/:slug/edit" element={<CommunityDetailEdit />} />
             <Route path="/admin/community/:slug" element={<CommunityDetailEdit />} />
+            
+            <Route path="/admin/profile" element={<UserProfile />} />
+            {/* Add more routes as needed */}
 
           </Route>
         {/* </Route> */}

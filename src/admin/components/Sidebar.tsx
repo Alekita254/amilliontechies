@@ -8,7 +8,11 @@ import {
   BarChart2,
   HelpCircle,
   Menu,
-  X
+  X,
+  UserCircle,
+  FileText,
+  Globe,
+  UserCog
 } from 'lucide-react';
 
 export function Sidebar() {
@@ -28,10 +32,10 @@ export function Sidebar() {
 
   const navItems = [
     { name: 'Dashboard', icon: Home, href: '/admin' },
-    { name: 'Blogs', icon: Briefcase, href: '/admin/blog' },
-    { name: 'Author', icon: Users, href: '/admin/author' },
-    { name: 'Community', icon: Users, href: '/admin/community' },
-    { name: 'Analytics', icon: BarChart2, href: '/admin/analytics' },
+    { name: 'Blogs', icon: FileText, href: '/admin/blog' },
+    { name: 'Author', icon: UserCircle, href: '/admin/author' },
+    { name: 'Community', icon: Globe, href: '/admin/community' },
+    { name: 'Profile', icon: UserCog, href: '/admin/profile' },
   ];
 
   const secondaryItems = [

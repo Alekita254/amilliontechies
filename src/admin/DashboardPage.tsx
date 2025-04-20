@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiGetRequest } from "@/backend/functions";
 import { DashboardLayout } from "./layouts/DashboardLayout";
 import { StatsGrid } from "./components/StatsCard";
 import { GraphCard } from "./components/GraphCard";
@@ -7,56 +8,86 @@ import { BlogSummary } from "./components/BlogSummary";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [blogData, setBlogData] = useState(null);
+  const [eventData, setEventData] = useState(null);
+  const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("user");
-    if (!isLoggedIn) navigate("/admin/login");
+    if (!isLoggedIn) return navigate("/admin/login");
+
+    const fetchDashboardStats = async () => {
+      const res = await apiGetRequest("dashboard/stats/");
+      if (res.data?.data) {
+        const stats = res.data.data;
+
+        // Monthly blog chart data
+        const monthlyLabels = Object.keys(stats.monthly_blog_posts);
+        const monthlyCounts = Object.values(stats.monthly_blog_posts);
+
+        setBlogData({
+          labels: monthlyLabels,
+          datasets: [
+            {
+              label: "Blog Posts",
+              data: monthlyCounts,
+              backgroundColor: "#34D399",
+            },
+          ],
+        });
+
+        // Community pie chart data
+        const communityLabels = stats.community_distribution.map(item => item.category);
+        const communityCounts = stats.community_distribution.map(item => item.count);
+
+        setEventData({
+          labels: communityLabels,
+          datasets: [
+            {
+              label: "Events",
+              data: communityCounts,
+              backgroundColor: ["#60A5FA", "#FBBF24", "#34D399"],
+            },
+          ],
+        });
+
+        // Latest 5 blogs
+        setBlogs(
+          stats.latest_blogs.map(blog => ({
+            title: blog.title,
+            author: blog.author?.name,
+            views: blog.views,
+            published: blog.date.slice(0, 10),
+          }))
+        );
+
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardStats();
   }, [navigate]);
 
-  const blogData = {
-    labels: ["Jan", "Feb", "Mar", "Apr"],
-    datasets: [
-      {
-        label: "Blog Posts",
-        data: [10, 20, 15, 30],
-        backgroundColor: "#34D399",
-      },
-    ],
-  };
-
-  const eventData = {
-    labels: ["Webinars", "Meetups", "Workshops"],
-    datasets: [
-      {
-        label: "Events",
-        data: [12, 7, 5],
-        backgroundColor: ["#60A5FA", "#FBBF24", "#34D399"],
-      },
-    ],
-  };
-
-  const blogs = [
-    { title: "AI in Agri", author: "Jane Doe", views: 1200, published: "2024-03-10" },
-    { title: "Safety Tools", author: "John Smith", views: 980, published: "2024-03-12" },
-    { title: "Market Access", author: "Alice W.", views: 875, published: "2024-04-01" },
-    { title: "Smart Cutters", author: "David K.", views: 790, published: "2024-03-28" },
-    { title: "Farming Tech", author: "Eve N.", views: 720, published: "2024-04-04" },
-  ];
-
+  if (loading) {
+    return (
+      <div className="p-6">
+        <h2 className="text-lg text-gray-600">Loading dashboard...</h2>
+      </div>
+    );
+  }
 
   return (
-      <div className="p-6 space-y-8">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Admin Dashboard</h2>
-          <p className="text-sm text-gray-500">Overview of site activity and performance</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <GraphCard title="Monthly Blog Posts" type="bar" data={blogData} />
-          <GraphCard title="Event Distribution" type="pie" data={eventData} />
-        </div>
-        {/* <ProjectsTable /> */}
-        {/* You can add BlogsTable and EventsTable below */}
-        <BlogSummary data={blogs} />
+    <div className="p-6 space-y-8">
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900">Admin Dashboard</h2>
+        <p className="text-sm text-gray-500">Overview of site activity and performance</p>
       </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <GraphCard title="Monthly Blog Posts" type="bar" data={blogData} />
+        <GraphCard title="Event Distribution" type="pie" data={eventData} />
+      </div>
+      <BlogSummary data={blogs} />
+    </div>
   );
 }
