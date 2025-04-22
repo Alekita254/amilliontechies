@@ -12,29 +12,25 @@ import { CommunityDetailEdit } from "@/admin/components/CommunityDetailEdit";
 import { ProfilePage } from "@/admin/pages/ProfilePage";
 import { UserProfile } from "@/admin/components/profile";
 
+
 export function AdminRoutes() {
   return (
     <>
       <Toaster position="top-right" richColors />
       <Routes>
-        {/* Public Admin Routes */}        
-          <Route path="/admin" element={<DashboardLayout />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="blog" element={<BlogPage />} />
-            <Route path="blog/:slug" element={<BlogDetailEdit />} />
-            <Route path="blog/:slug/edit" element={<BlogDetailEdit />} />
-            <Route path="/admin/author" element={<AuthorPage />} />
-            <Route path="/admin/author/create" element={<AuthorForm />} />
-            <Route path="/admin/author/edit/:id" element={<AuthorForm />} />
-            <Route path="/admin/community" element={<CommunityPage />} />
-            <Route path="/admin/community/:slug/edit" element={<CommunityDetailEdit />} />
-            <Route path="/admin/community/:slug" element={<CommunityDetailEdit />} />
-            
-            <Route path="/admin/profile" element={<UserProfile />} />
-            {/* Add more routes as needed */}
-
-          </Route>
-        {/* </Route> */}
+        <Route path="/admin" element={<DashboardLayout />}>
+          <Route index element={<DashboardPage />} />
+          <Route path="blog" element={<BlogPage />} />
+          <Route path="blog/:slug" element={<BlogDetailEdit />} />
+          <Route path="blog/:slug/edit" element={<BlogDetailEdit />} />
+          <Route path="author" element={<AuthorPage />} />
+          <Route path="author/create" element={<AuthorForm author={null} onSuccess={() => {}} />} />
+          <Route path="author/edit/:id" element={<AuthorForm author={null} onSuccess={() => {}} />} />
+          <Route path="community" element={<CommunityPage />} />
+          <Route path="community/:slug/edit" element={<CommunityDetailEdit />} />
+          <Route path="community/:slug" element={<CommunityDetailEdit />} />
+          <Route path="profile" element={<UserProfile />} />
+        </Route>
       </Routes>
     </>
   );

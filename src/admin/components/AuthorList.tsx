@@ -15,7 +15,7 @@ export function AuthorList({ authors, onEdit, onDelete }) {
         const value = getValue();
         return value ? (
           <img
-            src={value}
+            src={value as string}
             alt="Author"
             className="h-10 w-10 rounded-full object-cover"
           />
@@ -27,12 +27,14 @@ export function AuthorList({ authors, onEdit, onDelete }) {
     {
       accessorKey: "name",
       header: "Name",
-      cell: ({ getValue }) => <span>{getValue()}</span>,
+      cell: ({ getValue }) => <span>{getValue() as string}</span>
+
     },
     {
       accessorKey: "email",
       header: "Email",
-      cell: ({ getValue }) => <span>{getValue()}</span>,
+      cell: ({ getValue }) => <span>{getValue() as string}</span>
+      ,
     },
     {
       id: "actions",

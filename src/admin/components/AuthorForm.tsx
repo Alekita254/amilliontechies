@@ -24,10 +24,18 @@ export function AuthorForm({ author, onSuccess }) {
     }
   }, [author]);
 
-  const handleChange = (e) => {
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({ ...prev, [name]: value }));
+  // };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
