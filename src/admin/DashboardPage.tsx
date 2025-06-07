@@ -13,62 +13,7 @@ export default function DashboardPage() {
   const [eventData, setEventData] = useState(null);
   const [blogs, setBlogs] = useState([]);
 
-  // useEffect(() => { 
-  //   const isLoggedIn = localStorage.getItem("user");
-  //   if (!isLoggedIn) return navigate("/admin/login");
-
-  //   const fetchDashboardStats = async () => {
-  //     const res = await apiGetRequest("dashboard/stats/");
-  //     if (res.data?.data) {
-  //       const stats = res.data.data;
-
-  //       // Monthly blog chart data
-  //       const monthlyLabels = Object.keys(stats.monthly_blog_posts);
-  //       const monthlyCounts = Object.values(stats.monthly_blog_posts);
-
-  //       setBlogData({
-  //         labels: monthlyLabels,
-  //         datasets: [
-  //           {
-  //             label: "Blog Posts",
-  //             data: monthlyCounts,
-  //             backgroundColor: "#34D399",
-  //           },
-  //         ],
-  //       });
-
-  //       // Community pie chart data
-  //       const communityLabels = stats.community_distribution.map(item => item.category);
-  //       const communityCounts = stats.community_distribution.map(item => item.count);
-
-  //       setEventData({
-  //         labels: communityLabels,
-  //         datasets: [
-  //           {
-  //             label: "Events",
-  //             data: communityCounts,
-  //             backgroundColor: ["#60A5FA", "#FBBF24", "#34D399"],
-  //           },
-  //         ],
-  //       });
-
-  //       // Latest 5 blogs
-  //       setBlogs(
-  //         stats.latest_blogs.map(blog => ({
-  //           title: blog.title,
-  //           author: blog.author?.name,
-  //           views: blog.views,
-  //           published: blog.date.slice(0, 10),
-  //         }))
-  //       );
-
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchDashboardStats();
-  // }, [navigate]);
-
+ 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("user");
     if (!isLoggedIn) {
