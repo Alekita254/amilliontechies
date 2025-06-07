@@ -9,7 +9,12 @@ export const Footer = () => {
         {/* Branding */}
         <div className="col-span-full xl:col-span-2">
           <a rel="noreferrer noopener" href="/" className="font-bold text-xl flex">
-            <LogoIcon />
+            {/* <LogoIcon /> */}
+            <img
+    src="/src/assets/amilliontechies.png"
+    alt="A Million Techies Logo"
+    className="h-8 w-8"
+  />
             A Million Techies
           </a>
           <p className="text-sm opacity-70 mt-2">

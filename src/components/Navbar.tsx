@@ -1,11 +1,15 @@
-
 import { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
 import { LogoIcon } from "./Icons";
 import { ContactPopover } from "./contactPopover";
-
 
 interface RouteProps {
   href: string;
@@ -35,8 +39,12 @@ export const Navbar = () => {
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         {/* Logo */}
         <a href="/" className="ml-2 flex text-xl font-bold">
-          <LogoIcon />
-          Million Techies
+          <img
+            src="/src/assets/amilliontechies.png"
+            alt="A Million Techies Logo"
+            className="h-8 w-8"
+          />
+          A Million Techies
         </a>
 
         {/* Mobile Menu */}
@@ -56,26 +64,16 @@ export const Navbar = () => {
                 <a href="/" className={buttonVariants({ variant: "ghost" })}>
                   Home
                 </a>
-                {/* Courses Dropdown
-                <details className="w-full">
-                  <summary className="cursor-pointer p-2">Courses</summary>
-                  <ul className="ml-4 flex flex-col gap-2">
-                    {coursesList.map(({ href, label }) => (
-                      <li key={label}>
-                        <a href={href} className="text-sm text-gray-600 dark:text-gray-300">
-                          {label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </details> */}
-                {/* Community Dropdown */}
+
                 <details className="w-full">
                   <summary className="cursor-pointer p-2">Community</summary>
                   <ul className="ml-4 flex flex-col gap-2">
                     {communityList.map(({ href, label }) => (
                       <li key={label}>
-                        <a href={href} className="text-sm text-gray-600 dark:text-gray-300">
+                        <a
+                          href={href}
+                          className="text-sm text-gray-600 dark:text-gray-300"
+                        >
                           {label}
                         </a>
                       </li>
@@ -99,7 +97,7 @@ export const Navbar = () => {
                   className={buttonVariants({ variant: "default" })}
                 >
                   Join Us
-                </a>  
+                </a>
               </nav>
             </SheetContent>
           </Sheet>
@@ -137,14 +135,10 @@ export const Navbar = () => {
               </div>
             )}
           </div>
-          <a
-                  href="/joinus"
-                  className={buttonVariants({ variant: "default" })}
-                >
-                  Join Us
-                </a>
+          <a href="/joinus" className={buttonVariants({ variant: "default" })}>
+            Join Us
+          </a>
         </nav>
-
       </div>
     </header>
   );
