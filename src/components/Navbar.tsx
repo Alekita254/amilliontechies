@@ -40,7 +40,7 @@ export const Navbar = () => {
         {/* Logo */}
         <a href="/" className="ml-2 flex text-xl font-bold">
           <img
-            src="/src/assets/amilliontechies.png"
+            src="/amilliontechies.png"
             alt="A Million Techies Logo"
             className="h-8 w-8"
           />
