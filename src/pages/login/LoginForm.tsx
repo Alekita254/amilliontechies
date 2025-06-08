@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Leaf } from "lucide-react";
+import { API_URL } from "@/backend/names";
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ export default function LoginForm() {
     setError('');
 
     try {
-      const response = await fetch('https://millibackend.amilliontechies.com/api/token/', {
+      const response = await fetch(`${API_URL}/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
