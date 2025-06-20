@@ -10,7 +10,7 @@ import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
 import { LogoIcon } from "./Icons";
 import { ContactPopover } from "./contactPopover";
-
+import { ModeToggle } from "./mode-toggle";
 interface RouteProps {
   href: string;
   label: string;
@@ -46,6 +46,7 @@ export const Navbar = () => {
           />
           A Million Techies
         </a>
+        
 
         {/* Mobile Menu */}
         <div className="flex md:hidden">
@@ -98,6 +99,7 @@ export const Navbar = () => {
                 >
                   Join Us
                 </a>
+                <ModeToggle/>
               </nav>
             </SheetContent>
           </Sheet>
@@ -138,6 +140,7 @@ export const Navbar = () => {
           <a href="/joinus" className={buttonVariants({ variant: "default" })}>
             Join Us
           </a>
+          <ModeToggle/>
         </nav>
       </div>
     </header>
