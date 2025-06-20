@@ -23,8 +23,11 @@ export const HeroCards = () => {
             animate="animate"
             className="w-full flex justify-center"
           >
-        <div className="relative aspect-square bg-gradient-to-r from-indigo-50 to-purple-50 rounded-3xl p-8 shadow-xl">
-          <div className="absolute inset-0 rounded-3xl border-2 border-indigo-50/50" />
+        <div className="relative aspect-square 
+            bg-white/70 dark:bg-black/30 
+            backdrop-blur-md 
+            rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-gray-700">
+          <div className="absolute inset-0 rounded-3xl pointer-events-none" />
           <img
             src="/amilli.svg"
             alt="Illustration for A Million Techies"
@@ -35,3 +38,6 @@ export const HeroCards = () => {
     </div>
   );
 };
+
+
+
