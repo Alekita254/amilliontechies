@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 
 const BlogHeroSection = () => {
   return (
-    <section className="w-full bg-gray-900 text-white py-16 px-6 rounded-xl">
+    <section className="container w-full bg-gray-900 text-white py-16 px-6 rounded-xl">
       <div className="max-w-4xl mx-auto text-center">
         <h1 className="text-4xl font-bold">Explore the Latest Tech Trends</h1>
         <p className="mt-4 text-lg text-gray-300">
