@@ -11,7 +11,7 @@ export const Footer = () => {
           <a rel="noreferrer noopener" href="/" className="font-bold text-xl flex">
             {/* <LogoIcon /> */}
             <img
-    src="/src/assets/amilliontechies.png"
+    src="/amilliontechies.png"
     alt="A Million Techies Logo"
     className="h-8 w-8"
   />
