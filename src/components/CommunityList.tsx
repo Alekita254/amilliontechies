@@ -21,7 +21,7 @@ const CommunityList = ({ posts = [], categories = [] }: CommunityListProps) => {
           categories.map((category, index) => (
             <button
               key={index}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+            className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-md text-sm hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
             >
               {category}
             </button>
