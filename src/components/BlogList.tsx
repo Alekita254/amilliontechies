@@ -16,12 +16,12 @@ const BlogList = ({ blogs = [], categories = [] }: BlogListProps) => {
     return (
       <div>
         {/* Categories Filter */}
-        <div className="flex space-x-4 mb-6">
+        <div className="bg-white dark:border-b-slate-700 dark:bg-background flex space-x-4 mb-6">
           {categories.length > 0 ? (
             categories.map((category, index) => (
               <button
                 key={index}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                  className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-md text-sm"
               >
                 {category}
               </button>
