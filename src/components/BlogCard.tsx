@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { title } from "process";
 
 interface BlogCardProps {
   blog: {
@@ -19,7 +21,7 @@ const BlogCard = ({ blog }: BlogCardProps) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+    <Card>
       <img
         src={blog.image}
         alt={blog.title}
@@ -27,12 +29,15 @@ const BlogCard = ({ blog }: BlogCardProps) => {
         loading="lazy"
       />
 
-      <div className="p-4">
-        <h3 className="text-lg font-bold">{blog.title}</h3>
-        <p className="text-gray-600 mt-2">{blog.description}</p>
-        <Button className="mt-4" onClick={handleReadMore}>Read More</Button>
-      </div>
-    </div>
+      {/* <Card> */}
+        <CardHeader className="space-y-1 flex md:flex-row justify-start items-start gap-4">
+            <CardTitle>{blog.title}</CardTitle>  
+        </CardHeader>
+        <CardDescription className="text-md mt-2">{blog.description}</CardDescription>
+        <CardFooter >
+          <Button className="mt-4" onClick={handleReadMore}>Read More</Button>
+        </CardFooter>
+      </Card>
   );
 };
 
