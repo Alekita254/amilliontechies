@@ -31,10 +31,27 @@ interface JoinFormProps {
 }
 
 // Dropdown options
-const countries = ["Kenya", "Uganda", "Tanzania", "Rwanda", "Nigeria", "South Africa"];
-const countiesInKenya = ["Nairobi", "Mombasa", "Kisumu", "Machakos", "Nakuru", "Kiambu", "Meru", "Uasin Gishu"];
-const techAreas = ["Software Development", "Data Science", "AI/ML", "Cybersecurity", "Cloud Computing", "Web Development"];
-const contributionOptions = ["Mentorship", "Development", "Research", "Consulting", "Marketing", "Other"];
+const countries = ["Kenya", "Uganda", "Tanzania", "Rwanda", "Nigeria", "South Africa", "Other"];
+const countiesInKenya = ["Nairobi", "Mombasa", "Kisumu", "Machakos", "Nakuru", "Kiambu", "Meru", "Uasin Gishu", "Other"];
+const techAreas = ["Software Development", "Data Science", "AI/ML", "Cybersecurity", "Cloud Computing", "Web Development", "Other Related Tech Career"];
+const contributionOptions = [
+  "Mentorship",
+  "Development",
+  "Research",
+  "Consulting",
+  "Marketing",
+  "Partnership",
+  "Sponsorship",
+  "Event Organization",
+  "Content Creation",
+  "Community Building",
+  "Training & Workshops",
+  "Open Source Contributions",
+  "Technical Writing",
+  "Volunteering",
+  "Donations",
+  "Other"
+];
 const socialMediaOptions = ["Facebook", "Twitter", "Instagram", "LinkedIn", "YouTube", "Other"];
 
 // Steps configuration
@@ -133,17 +150,17 @@ export const JoinForm: React.FC<JoinFormProps> = ({ setThankYou }) => {
           transition={{ duration: 0.4 }}
           className="space-y-6"
         >
-          <h2 className="text-xl font-semibold text-gray-800">{steps[step].label}</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{steps[step].label}</h2>
 
           {steps[step].options ? (
             <select
               name={steps[step].name}
               value={formData[steps[step].name] || ""}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none bg-white dark:bg-[#18181f] text-gray-900 dark:text-gray-100 dark:border-gray-700 ${
                 errors[steps[step].name]
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'focus:ring-green-500'
+                  ? 'border-red-500 focus:ring-red-500 dark:focus:ring-red-500'
+                  : 'focus:ring-green-500 dark:focus:ring-green-500'
               }`}
             >
               <option value="">{steps[step].placeholder}</option>
@@ -158,16 +175,16 @@ export const JoinForm: React.FC<JoinFormProps> = ({ setThankYou }) => {
               placeholder={steps[step].placeholder}
               value={formData[steps[step].name] || ""}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none bg-white dark:bg-[#18181f] text-gray-900 dark:text-gray-100 dark:border-gray-700 ${
                 errors[steps[step].name]
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'focus:ring-green-500'
+                  ? 'border-red-500 focus:ring-red-500 dark:focus:ring-red-500'
+                  : 'focus:ring-green-500 dark:focus:ring-green-500'
               }`}
             />
           )}
 
           {errors[steps[step].name] && (
-            <p className="text-red-500 text-sm mt-1">{errors[steps[step].name]}</p>
+            <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors[steps[step].name]}</p>
           )}
 
           <div className="flex justify-between pt-4">
@@ -181,14 +198,14 @@ export const JoinForm: React.FC<JoinFormProps> = ({ setThankYou }) => {
                 Next
               </Button>
             ) : (
-              <Button onClick={handleSubmit} className="bg-black text-white hover:bg-gray-800" disabled={isSubmitting}>
+              <Button onClick={handleSubmit} className="bg-black text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-black dark:hover:bg-white" disabled={isSubmitting}>
                 {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             )}
           </div>
 
           {errors.general && (
-            <div className="text-red-600 text-sm text-center mt-4">
+            <div className="text-red-600 dark:text-red-400 text-sm text-center mt-4">
               {errors.general}
             </div>
           )}
