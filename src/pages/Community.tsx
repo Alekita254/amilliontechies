@@ -30,48 +30,7 @@ export const CommunityPage = () => {
     return <BlogLayout>Loading...</BlogLayout>;
   }
 
-  // const communityContent = {
-  //   socialLinks: [
-  //     {
-  //       id: 1,
-  //       name: "Facebook",
-  //       link: "https://facebook.com/community",
-  //       icon: "facebook",
-  //     },
-  //     {
-  //       id: 2,
-  //       name: "LinkedIn",
-  //       link: "https://linkedin.com/community",
-  //       icon: "linkedin",
-  //     },
-  //     {
-  //       id: 3,
-  //       name: "Twitter",
-  //       link: "https://twitter.com/community",
-  //       icon: "twitter",
-  //     },
-  //     {
-  //       id: 4,
-  //       name: "TikTok",
-  //       link: "https://tiktok.com/community",
-  //       icon: "tiktok",
-  //     },
-  //     {
-  //       id: 5,
-  //       name: "Discord",
-  //       link: "https://discord.com/community",
-  //       icon: "discord",
-  //     },
-  //     {
-  //       id: 6,
-  //       name: "WhatsApp",
-  //       link: "https://whatsapp.com/community",
-  //       icon: "whatsapp",
-  //     },
-      
-  //   ],
-  //   tags: ["Events", "Networking", "Workshops", "Social Media", "Community"],
-  // };
+
   const communityContent = {
     socialLinks: [
       { id: 1, name: "Facebook", link: "https://facebook.com/amilliontechies", icon: "facebook" },
