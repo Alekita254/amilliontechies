@@ -81,6 +81,12 @@ export const Navbar = () => {
                     ))}
                   </ul>
                 </details>
+                 <a
+                  href="https://learn.amilliontechies.com"
+                  className={buttonVariants({ variant: "default" })}
+                >
+                Learn Platform
+                </a>
                 <a
                   href="/blog"
                   className={buttonVariants({ variant: "default" })}
@@ -110,6 +116,12 @@ export const Navbar = () => {
           <a href="/" className={buttonVariants({ variant: "ghost" })}>
             Home
           </a>
+            <a
+                  href="https://learn.amilliontechies.com"
+                  className={buttonVariants({ variant: "ghost" })}
+                >
+                Learn Platform
+                </a>
           <a href="/blog" className={buttonVariants({ variant: "ghost" })}>
             Our Blogs
           </a>
