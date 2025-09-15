@@ -10,7 +10,7 @@ export const Hero = () => {
     <section className="container grid lg:grid-cols-2 place-items-center py-20 md:py-32 gap-10">
       <div className="text-center lg:text-start space-y-6">
         <main className="text-5xl md:text-6xl font-bold">
-          <h1 className="inline">Welome to A Million Techies</h1>{" "}
+          <h1 className="inline">Welcome to A Million Techies</h1>{" "}
           <h2 className="inline">- Learn. Build. Grow</h2>
         </main>
 
