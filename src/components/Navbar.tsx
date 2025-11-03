@@ -85,7 +85,7 @@ export const Navbar = () => {
                   href="https://learn.amilliontechies.com"
                   className={buttonVariants({ variant: "default" })}
                 >
-                Learn Platform
+                Courses
                 </a>
                 <a
                   href="/blog"

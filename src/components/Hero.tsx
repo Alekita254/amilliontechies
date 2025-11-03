@@ -39,7 +39,7 @@ export const Hero = () => {
         </div>
         <div className="space-y-4 md:space-y-0 md:space-x-4">
           <a href="https://learn.amilliontechies.com">
-            <Button className="w-full">Jump into the Learn Platform</Button>
+            <Button className="w-full">Courses</Button>
           </a>
         </div>
       </div>
