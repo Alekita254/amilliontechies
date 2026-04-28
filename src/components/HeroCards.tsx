@@ -1,9 +1,10 @@
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 
 export const HeroCards = () => {
 
-  const floatingAnimation = {
+  const floatingAnimation: Variants = {
+    initial: { y: 0 },
     animate: {
       y: [0, -20, 0],
       transition: {
