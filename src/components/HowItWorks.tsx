@@ -1,4 +1,5 @@
 
+import type { ReactNode } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { 
   GraduationCap, 
@@ -8,7 +9,7 @@ import {
 } from "lucide-react"; // Better icons
 
 interface FeatureProps {
-  icon: JSX.Element;
+  icon: ReactNode;
   title: string;
   description: string;
 }
@@ -72,4 +73,3 @@ export const HowItWorks = () => {
     </section>
   );
 };
-

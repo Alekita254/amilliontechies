@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
-import { title } from "process";
 
 interface BlogCardProps {
   blog: {

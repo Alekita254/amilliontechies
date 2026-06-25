@@ -6,7 +6,7 @@ import BlogComments from "@/components/BlogComments";
 import RelatedPosts from "@/components/RelatedPosts";
 import { apiGetRequest } from "@/backend/functions";
 import { useParams } from "react-router-dom";
-import "react-quill/dist/quill.snow.css";
+import "react-quill-new/dist/quill.snow.css";
 
 export const BlogDetail = () => {
   const { slug } = useParams();

@@ -1,5 +1,6 @@
 
 
+import type { ReactNode } from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Users, Code, Lightbulb, Briefcase } from "lucide-react";
 import rolesImage from "../assets/goals.svg";
@@ -7,7 +8,7 @@ import rolesImage from "../assets/goals.svg";
 interface RoleProps {
   title: string;
   description: string;
-  icon: JSX.Element;
+  icon: ReactNode;
 }
 
 const rolesList: RoleProps[] = [

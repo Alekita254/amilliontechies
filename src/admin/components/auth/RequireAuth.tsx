@@ -1,8 +1,9 @@
+import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 export function RequireAuth({ children, allowedRoles }: { 
-  children: JSX.Element;
+  children: ReactNode;
   allowedRoles: string[];
 }) {
   const { user, isAuthenticated } = useAuth();
@@ -16,5 +17,5 @@ export function RequireAuth({ children, allowedRoles }: {
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  return <>{children}</>;
 }

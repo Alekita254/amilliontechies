@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import ReactQuill from "react-quill";
+import ReactQuill from "react-quill-new";
 import { apiFormDataPostRequest, apiPostRequest, apiGetRequest } from "@/backend/functions";
-import "react-quill/dist/quill.snow.css";
+import "react-quill-new/dist/quill.snow.css";
 import { toast } from "sonner"; 
 
 

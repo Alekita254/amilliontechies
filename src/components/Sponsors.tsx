@@ -1,8 +1,9 @@
+import type { ReactNode } from "react";
 import { Radar } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface SponsorProps {
-  icon: JSX.Element;
+  icon: ReactNode;
   name: string;
   link: string;
 }

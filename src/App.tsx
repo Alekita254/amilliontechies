@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NotFound } from "./pages/NotFound";
 import "./App.css";
-import 'react-quill/dist/quill.snow.css';
+import "react-quill-new/dist/quill.snow.css";
 import LoadingScreen from "@/components/LoadingScreen";
 
 import { BrowserRouter as Router } from "react-router-dom";

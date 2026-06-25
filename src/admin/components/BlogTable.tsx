@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiGetRequest } from "@/backend/functions";
+import { API_URL } from "@/backend/names";
 import { toast } from "sonner";
 
 type Blog = {
@@ -38,7 +39,7 @@ export function BlogTable() {
     if (!confirm("Delete this blog?")) return;
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await fetch(`http://localhost:5000/api/blogs/${id}/`, {
+      const response = await fetch(`${API_URL}/blogs/${id}/`, {
         method: "DELETE",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
