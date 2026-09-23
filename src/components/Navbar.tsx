@@ -8,30 +8,26 @@ import {
 } from "@/components/ui/sheet";
 import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
-import { LogoIcon } from "./Icons";
-import { ContactPopover } from "./contactPopover";
 import { ModeToggle } from "./mode-toggle";
 interface RouteProps {
   href: string;
   label: string;
 }
 
-const coursesList: RouteProps[] = [
-  { href: "#linux", label: "Linux" },
-  { href: "#python", label: "Python" },
-  { href: "#cybersecurity", label: "Cybersecurity" },
-  { href: "#webdev", label: "Web Development" },
+const programsList: RouteProps[] = [
+  { href: "/cohorts", label: "Cohorts" },
+  { href: "https://learn.amilliontechies.com", label: "Mentorship / Learning" },
 ];
 
 const communityList: RouteProps[] = [
-  { href: "/community", label: "Forums" },
-  { href: "/community", label: "Discord" },
-  { href: "/community", label: "Mentorship" },
+  { href: "/community", label: "Our Community" },
+  { href: "/mentors", label: "Mentors" },
+  { href: "/events", label: "Events" },
 ];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isCoursesOpen, setIsCoursesOpen] = useState<boolean>(false);
+  const [isProgramsOpen, setIsProgramsOpen] = useState<boolean>(false);
   const [isCommunityOpen, setIsCommunityOpen] = useState<boolean>(false);
 
   return (
@@ -65,7 +61,25 @@ export const Navbar = () => {
                 <a href="/" className={buttonVariants({ variant: "ghost" })}>
                   Home
                 </a>
+                <a href="/about" className={buttonVariants({ variant: "ghost" })}>
+                  About
+                </a>
 
+                <details className="w-full">
+                  <summary className="cursor-pointer p-2">Programs</summary>
+                  <ul className="ml-4 flex flex-col gap-2">
+                    {programsList.map(({ href, label }) => (
+                      <li key={label}>
+                        <a
+                          href={href}
+                          className="text-sm text-gray-600 dark:text-gray-300"
+                        >
+                          {label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
                 <details className="w-full">
                   <summary className="cursor-pointer p-2">Community</summary>
                   <ul className="ml-4 flex flex-col gap-2">
@@ -81,26 +95,26 @@ export const Navbar = () => {
                     ))}
                   </ul>
                 </details>
-                 <a
-                  href="https://learn.amilliontechies.com"
+                <a
+                  href="/stories"
                   className={buttonVariants({ variant: "default" })}
                 >
-                Courses
+                  Stories
+                </a>
+                <a
+                  href="/projects"
+                  className={buttonVariants({ variant: "default" })}
+                >
+                  Projects
                 </a>
                 <a
                   href="/blog"
                   className={buttonVariants({ variant: "default" })}
                 >
-                  Our Blogs
+                  Blog
                 </a>
                 <a
-                  href="/community"
-                  className={buttonVariants({ variant: "default" })}
-                >
-                  Community
-                </a>
-                <a
-                  href="/joinus"
+                  href="/join-us"
                   className={buttonVariants({ variant: "default" })}
                 >
                   Join Us
@@ -116,18 +130,42 @@ export const Navbar = () => {
           <a href="/" className={buttonVariants({ variant: "ghost" })}>
             Home
           </a>
-            <a
-                  href="https://learn.amilliontechies.com"
-                  className={buttonVariants({ variant: "ghost" })}
-                >
-                Courses
-                </a>
-          <a href="/blog" className={buttonVariants({ variant: "ghost" })}>
-            Our Blogs
+          <a href="/about" className={buttonVariants({ variant: "ghost" })}>
+            About
           </a>
-          {/* Courses Dropdown
-           */}
-          {/* Community Dropdown */}
+          <a href="/cohorts" className={buttonVariants({ variant: "ghost" })}>
+            Cohorts
+          </a>
+          <a href="/stories" className={buttonVariants({ variant: "ghost" })}>
+            Stories
+          </a>
+          <a href="/projects" className={buttonVariants({ variant: "ghost" })}>
+            Projects
+          </a>
+          <a href="/blog" className={buttonVariants({ variant: "ghost" })}>
+            Blog
+          </a>
+          <div className="relative">
+            <button
+              onClick={() => setIsProgramsOpen(!isProgramsOpen)}
+              className={buttonVariants({ variant: "ghost" })}
+            >
+              Programs
+            </button>
+            {isProgramsOpen && (
+              <div className="absolute left-0 top-full mt-2 w-52 bg-white dark:bg-gray-900 shadow-md rounded-md">
+                {programsList.map(({ href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    className="block px-4 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-700"
+                  >
+                    {label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="relative">
             <button
               onClick={() => setIsCommunityOpen(!isCommunityOpen)}
@@ -149,7 +187,7 @@ export const Navbar = () => {
               </div>
             )}
           </div>
-          <a href="/joinus" className={buttonVariants({ variant: "default" })}>
+          <a href="/join-us" className={buttonVariants({ variant: "default" })}>
             Join Us
           </a>
           <ModeToggle/>

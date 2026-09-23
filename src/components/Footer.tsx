@@ -34,25 +34,25 @@ export const Footer = () => {
         {/* Learning Resources */}
         <div className="flex flex-col gap-2">
           <h3 className="font-bold text-lg">Resources</h3>
-          <a rel="noreferrer noopener" href="/blog" className="opacity-60 hover:opacity-100">Blogs</a>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Courses</a>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Workshops</a>
+          <a rel="noreferrer noopener" href="/blog" className="opacity-60 hover:opacity-100">Blog</a>
+          <a rel="noreferrer noopener" href="/stories" className="opacity-60 hover:opacity-100">Stories</a>
+          <a rel="noreferrer noopener" href="/cohorts" className="opacity-60 hover:opacity-100">Cohorts</a>
         </div>
 
         {/* Open Source */}
         <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Open Source</h3>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Contribute</a>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Projects</a>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Docs</a>
+          <h3 className="font-bold text-lg">Community</h3>
+          <a rel="noreferrer noopener" href="/community" className="opacity-60 hover:opacity-100">Our Community</a>
+          <a rel="noreferrer noopener" href="/mentors" className="opacity-60 hover:opacity-100">Mentors</a>
+          <a rel="noreferrer noopener" href="/projects" className="opacity-60 hover:opacity-100">Projects</a>
         </div>
 
         {/* Events */}
         <div className="flex flex-col gap-2">
           <h3 className="font-bold text-lg">Events</h3>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Meetups</a>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Hackathons</a>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Webinars</a>
+          <a rel="noreferrer noopener" href="/events" className="opacity-60 hover:opacity-100">Meetups</a>
+          <a rel="noreferrer noopener" href="/events" className="opacity-60 hover:opacity-100">Hackathons</a>
+          <a rel="noreferrer noopener" href="/events" className="opacity-60 hover:opacity-100">Webinars</a>
         </div>
       </section>
 
@@ -62,8 +62,11 @@ export const Footer = () => {
           &copy; 2024 A Million Techies. Built for the community, by the community.
         </h3>
         <h3 className="mt-2">
+          Discover the community on amilliontechies.com and continue learning on learn.amilliontechies.com.
+        </h3>
+        <h3 className="mt-2">
           Want to get involved?{" "}
-          <a rel="noreferrer noopener" href="#" className="text-primary transition-all border-primary hover:border-b-2">
+          <a rel="noreferrer noopener" href="/join-us" className="text-primary transition-all border-primary hover:border-b-2">
             Join Us
           </a>
         </h3>
