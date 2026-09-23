@@ -1,11 +1,23 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { cohorts } from "@/assets/publicContent";
+import { apiGetRequest } from "@/backend/functions";
 
 type StatusFilter = "ALL" | "UPCOMING" | "ACTIVE" | "COMPLETED";
+
+type Cohort = {
+  title: string;
+  slug: string;
+  status: "UPCOMING" | "ACTIVE" | "COMPLETED";
+  short_description?: string;
+  description?: string;
+  duration?: string;
+  learner_count?: number;
+  mentor_count?: number;
+  program_type?: string;
+};
 
 const statusClasses: Record<StatusFilter, string> = {
   ALL: "",
@@ -16,11 +28,64 @@ const statusClasses: Record<StatusFilter, string> = {
 
 export function CohortsPage() {
   const [status, setStatus] = useState<StatusFilter>("ALL");
+  const [cohorts, setCohorts] = useState<Cohort[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadCohorts = async () => {
+      setLoading(true);
+      setError(null);
+
+      const candidates = ["cohorts/", "public/cohorts/"];
+
+      for (const endpoint of candidates) {
+        const res = await apiGetRequest(endpoint);
+        const payload = res?.data;
+        const rows = Array.isArray(payload?.results)
+          ? payload.results
+          : Array.isArray(payload?.data)
+            ? payload.data
+            : Array.isArray(payload)
+              ? payload
+              : null;
+
+        if (rows) {
+          setCohorts(rows);
+          setLoading(false);
+          return;
+        }
+      }
+
+      setError("We couldn't load cohorts right now. Please try again.");
+      setLoading(false);
+    };
+
+    loadCohorts();
+  }, []);
 
   const filtered = useMemo(() => {
     if (status === "ALL") return cohorts;
     return cohorts.filter((cohort) => cohort.status === status);
   }, [status]);
+
+  if (loading) {
+    return (
+      <main className="container py-12 md:py-16">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Cohorts</h1>
+        <p className="mt-4 text-muted-foreground">Loading cohorts...</p>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="container py-12 md:py-16">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Cohorts</h1>
+        <p className="mt-4 text-red-600">{error}</p>
+      </main>
+    );
+  }
 
   return (
     <main className="container py-12 md:py-16">
@@ -44,29 +109,32 @@ export function CohortsPage() {
       </section>
 
       <section className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {filtered.length === 0 && (
+          <p className="text-muted-foreground">No cohorts have been published yet.</p>
+        )}
         {filtered.map((cohort) => (
           <Card key={cohort.slug} className="border-zinc-200/80">
             <CardHeader>
               <div className="flex items-center justify-between gap-2">
                 <Badge className={statusClasses[cohort.status]}>{cohort.status}</Badge>
-                <span className="text-xs text-muted-foreground">{cohort.track}</span>
+                <span className="text-xs text-muted-foreground">{cohort.program_type || "Program"}</span>
               </div>
               <CardTitle className="text-xl leading-tight">{cohort.title}</CardTitle>
-              <CardDescription>{cohort.shortDescription}</CardDescription>
+              <CardDescription>{cohort.short_description || cohort.description || ""}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-2 text-sm mb-4">
                 <div>
                   <p className="text-muted-foreground">Duration</p>
-                  <p className="font-medium">{cohort.duration}</p>
+                  <p className="font-medium">{cohort.duration || "TBD"}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Learners</p>
-                  <p className="font-medium">{cohort.learnerCount}</p>
+                  <p className="font-medium">{cohort.learner_count ?? "-"}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Mentors</p>
-                  <p className="font-medium">{cohort.mentorCount}</p>
+                  <p className="font-medium">{cohort.mentor_count ?? "-"}</p>
                 </div>
               </div>
 

@@ -11,6 +11,8 @@ import CommunityPage from "@/admin/pages/CommunityPage";
 import { CommunityDetailEdit } from "@/admin/components/CommunityDetailEdit";
 import { ProfilePage } from "@/admin/pages/ProfilePage";
 import { UserProfile } from "@/admin/components/profile";
+import CohortPage from "@/admin/pages/CohortPage";
+import { CohortDetailEdit } from "@/admin/components/CohortDetailEdit";
 
 
 export function AdminRoutes() {
@@ -29,6 +31,8 @@ export function AdminRoutes() {
           <Route path="community" element={<CommunityPage />} />
           <Route path="community/:slug/edit" element={<CommunityDetailEdit />} />
           <Route path="community/:slug" element={<CommunityDetailEdit />} />
+          <Route path="cohorts" element={<CohortPage />} />
+          <Route path="cohorts/:slug/edit" element={<CohortDetailEdit />} />
           <Route path="profile" element={<UserProfile />} />
         </Route>
       </Routes>

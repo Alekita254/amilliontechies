@@ -36,6 +36,7 @@ export function TopNav() {
   const getPageTitle = () => {
     const path = location.pathname;
     if (path === '/admin') return 'Dashboard';
+    if (path.startsWith('/admin/cohorts')) return 'Cohort Management';
     if (path.startsWith('/admin/blog')) return 'Blog Management';
     if (path.startsWith('/admin/author')) return 'Author Management';
     if (path.startsWith('/admin/community')) return 'Community';

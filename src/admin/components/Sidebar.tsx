@@ -52,6 +52,7 @@ export function Sidebar() {
 
   const navItems = [
     { name: "Dashboard", icon: Home, href: "/admin" },
+    { name: "Cohorts", icon: Briefcase, href: "/admin/cohorts" },
     { name: "Blogs", icon: FileText, href: "/admin/blog" },
     { name: "Author", icon: UserCircle, href: "/admin/author" },
     { name: "Community", icon: Globe, href: "/admin/community" },
