@@ -1,34 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiGetRequest } from "@/backend/functions";
+import { CohortCard, CohortCardData } from "@/components/CohortCard";
 
-type CohortStatus = "UPCOMING" | "ACTIVE" | "COMPLETED";
 type CohortFilter = "PRESENT" | "PAST";
-
-type Cohort = {
-  title: string;
-  slug: string;
-  status: CohortStatus;
-  short_description?: string;
-  description?: string;
-  duration?: string;
-  learner_count?: number;
-  mentor_count?: number;
-  program_type?: string;
-};
-
-const statusClasses: Record<CohortStatus, string> = {
-  UPCOMING: "bg-blue-100 text-blue-700 border-blue-200",
-  ACTIVE: "bg-emerald-100 text-emerald-700 border-emerald-200",
-  COMPLETED: "bg-slate-100 text-slate-700 border-slate-200",
-};
 
 export function CohortsPage() {
   const [filter, setFilter] = useState<CohortFilter>("PRESENT");
-  const [cohorts, setCohorts] = useState<Cohort[]>([]);
+  const [cohorts, setCohorts] = useState<CohortCardData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -130,36 +109,7 @@ export function CohortsPage() {
           </p>
         )}
         {filtered.map((cohort) => (
-          <Card key={cohort.slug} className="border-zinc-200/80">
-            <CardHeader>
-              <div className="flex items-center justify-between gap-2">
-                <Badge className={statusClasses[cohort.status]}>{cohort.status}</Badge>
-                <span className="text-xs text-muted-foreground">{cohort.program_type || "Program"}</span>
-              </div>
-              <CardTitle className="text-xl leading-tight">{cohort.title}</CardTitle>
-              <CardDescription>{cohort.short_description || cohort.description || ""}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-2 text-sm mb-4">
-                <div>
-                  <p className="text-muted-foreground">Duration</p>
-                  <p className="font-medium">{cohort.duration || "TBD"}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Learners</p>
-                  <p className="font-medium">{cohort.learner_count ?? "-"}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Mentors</p>
-                  <p className="font-medium">{cohort.mentor_count ?? "-"}</p>
-                </div>
-              </div>
-
-              <Button asChild className="w-full">
-                <Link to={`/cohorts/${cohort.slug}`}>Explore Cohort</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <CohortCard key={cohort.slug} cohort={cohort} />
         ))}
       </section>
     </main>

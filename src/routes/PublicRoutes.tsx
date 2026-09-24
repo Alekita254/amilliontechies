@@ -14,6 +14,7 @@ import { JoinUsPage } from "../pages/JoinUsPage";
 import  LoginPage  from "@/pages/login/LoginPage";
 import { CohortsPage } from "@/pages/CohortsPage";
 import { CohortDetailPage } from "@/pages/CohortDetailPage";
+import { CohortMenteesPage, CohortMentorsPage } from "@/pages/CohortPeoplePage";
 import { StoriesPage } from "@/pages/StoriesPage";
 import { StoryDetailPage } from "@/pages/StoryDetailPage";
 import { MentorsPage } from "@/pages/MentorsPage";
@@ -43,6 +44,8 @@ export function PublicRoutes() {
         <Route path="/about" element={<Layout><AboutPage /></Layout>} />
         <Route path="/cohorts" element={<Layout><CohortsPage /></Layout>} />
         <Route path="/cohorts/:slug" element={<Layout><CohortDetailPage /></Layout>} />
+        <Route path="/cohorts/:slug/mentees" element={<Layout><CohortMenteesPage /></Layout>} />
+        <Route path="/cohorts/:slug/mentors" element={<Layout><CohortMentorsPage /></Layout>} />
         <Route path="/stories" element={<Layout><StoriesPage /></Layout>} />
         <Route path="/stories/:slug" element={<Layout><StoryDetailPage /></Layout>} />
         <Route path="/mentors" element={<Layout><MentorsPage /></Layout>} />

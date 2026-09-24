@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiGetRequest } from "@/backend/functions";
+import { getCohortPeople, getInitials } from "@/assets/cohortPeople";
 
 type Cohort = {
   title: string;
@@ -85,6 +86,10 @@ export function CohortDetailPage() {
     );
   }
 
+  const { mentees, mentors } = getCohortPeople(cohort.slug);
+  const menteeCount = mentees.length || cohort.learner_count || 0;
+  const mentorCount = mentors.length || cohort.mentor_count || 0;
+
   return (
     <main className="container py-12 md:py-16 space-y-10">
       <section>
@@ -102,15 +107,67 @@ export function CohortDetailPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Learners</CardTitle>
+            <CardTitle className="text-lg">Mentees</CardTitle>
           </CardHeader>
-          <CardContent>{cohort.learner_count ?? "-"}</CardContent>
+          <CardContent>{menteeCount || "-"}</CardContent>
         </Card>
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Mentors</CardTitle>
           </CardHeader>
-          <CardContent>{cohort.mentor_count ?? "-"}</CardContent>
+          <CardContent>{mentorCount || "-"}</CardContent>
+        </Card>
+      </section>
+
+      <section className="grid md:grid-cols-2 gap-5">
+        <Card>
+          <CardHeader>
+            <CardTitle>Mentees in this Cohort</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              {mentees.slice(0, 3).map((person) => (
+                <div key={person.id} className="flex items-start gap-3">
+                  <div className="h-9 w-9 shrink-0 rounded-full bg-primary/15 text-primary text-xs font-semibold flex items-center justify-center">
+                    {getInitials(person.name)}
+                  </div>
+                  <div>
+                    <p className="font-medium leading-tight">{person.name}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{person.title}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Button asChild variant="outline" className="w-full sm:w-auto">
+              <Link to={`/cohorts/${cohort.slug}/mentees`}>View all mentees</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Mentors in this Cohort</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              {mentors.slice(0, 3).map((person) => (
+                <div key={person.id} className="flex items-start gap-3">
+                  <div className="h-9 w-9 shrink-0 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold flex items-center justify-center dark:bg-emerald-900/30 dark:text-emerald-300">
+                    {getInitials(person.name)}
+                  </div>
+                  <div>
+                    <p className="font-medium leading-tight">{person.name}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{person.title}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Button asChild variant="outline" className="w-full sm:w-auto">
+              <Link to={`/cohorts/${cohort.slug}/mentors`}>View all mentors</Link>
+            </Button>
+          </CardContent>
         </Card>
       </section>
 
@@ -125,7 +182,7 @@ export function CohortDetailPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>What Learners Build</CardTitle>
+            <CardTitle>What Mentees Build</CardTitle>
           </CardHeader>
           <CardContent className="text-muted-foreground">
             Production-style portfolio projects, technical writeups, and teamwork artifacts that reflect real-world delivery.
