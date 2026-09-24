@@ -1,3 +1,7 @@
+import growthImage from "@/assets/growth.png";
+import lookingAheadImage from "@/assets/looking-ahead.png";
+import reflectingImage from "@/assets/reflecting.png";
+
 export type Cohort = {
   title: string;
   slug: string;
@@ -16,6 +20,12 @@ export type Story = {
   personType: "MENTEE" | "MENTOR" | "ALUMNI";
   cohort: string;
   excerpt: string;
+  coverImage: string;
+  publishedAt: string;
+  readTime: string;
+  tags: string[];
+  featured?: boolean;
+  content: string[];
 };
 
 export type Mentor = {
@@ -25,6 +35,7 @@ export type Mentor = {
   shortBio: string;
   expertise: string[];
   cohorts: string[];
+  mentorImage?: string;
 };
 
 export type Project = {
@@ -86,6 +97,17 @@ export const stories: Story[] = [
     personType: "MENTEE",
     cohort: "Backend Engineering Cohort 03",
     excerpt: "I joined with no confidence in my coding journey and left with my first deployed API.",
+    coverImage: growthImage,
+    publishedAt: "2026-08-12",
+    readTime: "6 min read",
+    tags: ["Growth", "Backend", "Confidence"],
+    featured: true,
+    content: [
+      "When I joined A Million Techies, my biggest challenge was believing I could build something real. I had watched tutorials for months, but I had never completed a production-ready project.",
+      "The cohort structure gave me momentum. Weekly sprints, mentor reviews, and peer accountability helped me stop overthinking and start shipping. I moved from simple endpoint exercises to designing full API flows with authentication, error handling, and deployment.",
+      "The turning point was demo day prep. Explaining my architecture choices to others made me realize how much I had grown. I was no longer just learning concepts. I was practicing delivery, communication, and engineering judgment.",
+      "Today, I have a deployed API in my portfolio and the confidence to keep building. My biggest takeaway is that community-backed consistency beats isolated motivation every time.",
+    ],
   },
   {
     title: "Mentoring Across Borders",
@@ -94,6 +116,16 @@ export const stories: Story[] = [
     personType: "MENTOR",
     cohort: "Frontend Engineering Cohort 05",
     excerpt: "How mentorship circles helped learners collaborate and grow faster.",
+    coverImage: lookingAheadImage,
+    publishedAt: "2026-09-01",
+    readTime: "5 min read",
+    tags: ["Mentorship", "Frontend", "Community"],
+    content: [
+      "Mentoring across countries taught me that learners often share the same blockers, regardless of location: uncertainty, inconsistency, and lack of feedback loops.",
+      "We introduced smaller mentorship circles so learners could receive targeted support while still contributing to a larger cohort. The quality of questions improved, and peers started helping each other before waiting for mentor intervention.",
+      "The biggest gain was confidence transfer. Once a learner solved a challenge in one circle, that learning spread quickly through demos and async notes. Community became an accelerator.",
+      "For me, mentoring is not just about technical correction. It is about building momentum systems that make growth repeatable.",
+    ],
   },
   {
     title: "How Cohorts Opened My Career Path",
@@ -102,6 +134,16 @@ export const stories: Story[] = [
     personType: "ALUMNI",
     cohort: "DevOps Foundations Cohort 01",
     excerpt: "A practical story of learning, building, and landing opportunities.",
+    coverImage: reflectingImage,
+    publishedAt: "2026-09-14",
+    readTime: "7 min read",
+    tags: ["Career", "DevOps", "Opportunities"],
+    content: [
+      "Before the cohort, I knew DevOps terms but had no practical workflow. I could describe CI/CD, but I had not built reliable delivery pipelines myself.",
+      "Inside the cohort, we worked through real deployment cycles, including troubleshooting failures and documenting decisions. That practical repetition changed how I approached problems.",
+      "By the end, I had a portfolio story I could clearly explain in interviews: what I built, why I built it that way, what broke, and how I fixed it.",
+      "The opportunities that followed came from clarity. The cohort gave me evidence of capability, not just certificates.",
+    ],
   },
 ];
 
@@ -113,6 +155,7 @@ export const mentors: Mentor[] = [
     shortBio: "Supports learners building resilient backend systems and APIs.",
     expertise: ["Django", "REST APIs", "System Design"],
     cohorts: ["Backend Engineering Cohort 03"],
+    mentorImage: growthImage,
   },
   {
     name: "Ruth Wambui",
@@ -121,6 +164,7 @@ export const mentors: Mentor[] = [
     shortBio: "Helps learners craft accessible and high-performing frontends.",
     expertise: ["React", "TypeScript", "UX"],
     cohorts: ["Frontend Engineering Cohort 05"],
+    mentorImage: lookingAheadImage,
   },
   {
     name: "Kevin Otieno",
@@ -129,6 +173,7 @@ export const mentors: Mentor[] = [
     shortBio: "Guides teams through deployment automation and observability.",
     expertise: ["Docker", "Kubernetes", "CI/CD"],
     cohorts: ["DevOps Foundations Cohort 01"],
+    mentorImage: reflectingImage,
   },
 ];
 
