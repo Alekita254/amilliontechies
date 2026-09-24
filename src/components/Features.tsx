@@ -60,19 +60,19 @@ const featureList: string[] = [
 
 export const Features = () => {
   return (
-    <section id="features" className="container py-24 sm:py-32 space-y-8">
-      <h2 className="text-3xl lg:text-4xl font-bold md:text-center">
+    <section id="features" className="container space-y-8 px-4 py-24 sm:py-32">
+      <h2 className="text-3xl font-bold md:text-center lg:text-4xl">
         What Makes{" "}
         <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
           A Million Techies Unique?
         </span>
       </h2>
 
-      <p className="text-xl text-muted-foreground md:w-3/4 mx-auto text-center">
+      <p className="mx-auto max-w-3xl text-center text-base text-muted-foreground sm:text-lg lg:text-xl">
         We provide a holistic platform for learning, collaboration, and career growth in tech.
       </p>
 
-      <div className="flex flex-wrap md:justify-center gap-4">
+      <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
         {featureList.map((feature) => (
           <Badge key={feature} variant="secondary" className="text-sm">
             {feature}
@@ -95,7 +95,7 @@ export const Features = () => {
               <img
                 src={image}
                 alt={title}
-                className="w-[200px] lg:w-[250px] mx-auto"
+                className="mx-auto w-full max-w-[180px] sm:max-w-[220px] lg:max-w-[250px]"
               />
             </CardFooter>
           </Card>

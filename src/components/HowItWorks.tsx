@@ -43,14 +43,14 @@ const features: FeatureProps[] = [
 
 export const HowItWorks = () => {
   return (
-    <section id="howItWorks" className="container text-center py-24 sm:py-32">
+    <section id="howItWorks" className="container px-4 py-24 text-center sm:py-32">
       <h2 className="text-3xl md:text-4xl font-bold">
         How We{" "}
         <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
           Work
         </span>
       </h2>
-      <p className="md:w-3/4 mx-auto mt-4 mb-8 text-xl text-muted-foreground">
+      <p className="mx-auto mt-4 mb-8 max-w-3xl text-base text-muted-foreground sm:text-lg lg:text-xl">
         We empower techies to learn, build, network, and mentor—driving a future of innovation.
       </p>
 
@@ -66,7 +66,7 @@ export const HowItWorks = () => {
                 <span className="text-lg font-semibold">{title}</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="text-muted-foreground">{description}</CardContent>
+            <CardContent className="text-sm text-muted-foreground sm:text-base">{description}</CardContent>
           </Card>
         ))}
       </div>

@@ -1,70 +1,109 @@
-import { LogoIcon } from "./Icons";
+interface FooterLink {
+  label: string;
+  href: string;
+}
+
+const footerPrimaryLinks: FooterLink[] = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Cohorts", href: "/cohorts" },
+  { label: "Stories", href: "/stories" },
+  { label: "Projects", href: "/projects" },
+  { label: "Blog", href: "/blog" },
+  { label: "Join Us", href: "/join-us" },
+];
+
+const footerProgramLinks: FooterLink[] = [
+  { label: "Cohorts", href: "/cohorts" },
+  { label: "Mentorship / Learning", href: "https://learn.amilliontechies.com" },
+];
+
+const footerCommunityLinks: FooterLink[] = [
+  { label: "Our Community", href: "/community" },
+  { label: "Mentors", href: "/mentors" },
+  { label: "Events", href: "/events" },
+];
+
+const footerSocialLinks: FooterLink[] = [
+  { label: "Twitter", href: "#" },
+  { label: "LinkedIn", href: "#" },
+  { label: "GitHub", href: "#" },
+  { label: "Discord", href: "#" },
+];
 
 export const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer id="footer">
       <hr className="w-11/12 mx-auto" />
 
-      <section className="container py-20 grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-x-12 gap-y-8">
+      <section className="container grid gap-10 px-4 py-16 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         {/* Branding */}
-        <div className="col-span-full xl:col-span-2">
-          <a rel="noreferrer noopener" href="/" className="font-bold text-xl flex">
-            {/* <LogoIcon /> */}
+        <div className="col-span-full max-w-md xl:col-span-2">
+          <a rel="noreferrer noopener" href="/" className="flex items-center gap-3 text-lg font-bold sm:text-xl">
             <img
-    src="/amilliontechies.png"
-    alt="A Million Techies Logo"
-    className="h-8 w-8"
-  />
+              src="/amilliontechies.png"
+              alt="A Million Techies Logo"
+              className="h-8 w-8 shrink-0"
+            />
             A Million Techies
           </a>
-          <p className="text-sm opacity-70 mt-2">
+          <p className="mt-3 text-sm leading-6 opacity-70">
             Empowering developers, designers, and tech enthusiasts worldwide.
           </p>
         </div>
 
-        {/* Follow Us */}
-        <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Follow Us</h3>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Twitter</a>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">LinkedIn</a>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">GitHub</a>
-          <a rel="noreferrer noopener" href="#" className="opacity-60 hover:opacity-100">Discord</a>
+        {/* Main Navigation */}
+        <div className="flex flex-col gap-3 text-sm sm:text-base">
+          <h3 className="text-lg font-bold">Navigation</h3>
+          {footerPrimaryLinks.map(({ label, href }) => (
+            <a key={label} rel="noreferrer noopener" href={href} className="opacity-60 hover:opacity-100">
+              {label}
+            </a>
+          ))}
         </div>
 
-        {/* Learning Resources */}
-        <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Resources</h3>
-          <a rel="noreferrer noopener" href="/blog" className="opacity-60 hover:opacity-100">Blog</a>
-          <a rel="noreferrer noopener" href="/stories" className="opacity-60 hover:opacity-100">Stories</a>
-          <a rel="noreferrer noopener" href="/cohorts" className="opacity-60 hover:opacity-100">Cohorts</a>
+        {/* Programs */}
+        <div className="flex flex-col gap-3 text-sm sm:text-base">
+          <h3 className="text-lg font-bold">Programs</h3>
+          {footerProgramLinks.map(({ label, href }) => (
+            <a key={label} rel="noreferrer noopener" href={href} className="opacity-60 hover:opacity-100">
+              {label}
+            </a>
+          ))}
         </div>
 
-        {/* Open Source */}
-        <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Community</h3>
-          <a rel="noreferrer noopener" href="/community" className="opacity-60 hover:opacity-100">Our Community</a>
-          <a rel="noreferrer noopener" href="/mentors" className="opacity-60 hover:opacity-100">Mentors</a>
-          <a rel="noreferrer noopener" href="/projects" className="opacity-60 hover:opacity-100">Projects</a>
+        {/* Community */}
+        <div className="flex flex-col gap-3 text-sm sm:text-base">
+          <h3 className="text-lg font-bold">Community</h3>
+          {footerCommunityLinks.map(({ label, href }) => (
+            <a key={label} rel="noreferrer noopener" href={href} className="opacity-60 hover:opacity-100">
+              {label}
+            </a>
+          ))}
         </div>
 
-        {/* Events */}
-        <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Events</h3>
-          <a rel="noreferrer noopener" href="/events" className="opacity-60 hover:opacity-100">Meetups</a>
-          <a rel="noreferrer noopener" href="/events" className="opacity-60 hover:opacity-100">Hackathons</a>
-          <a rel="noreferrer noopener" href="/events" className="opacity-60 hover:opacity-100">Webinars</a>
+        {/* Social */}
+        <div className="flex flex-col gap-3 text-sm sm:text-base">
+          <h3 className="text-lg font-bold">Follow Us</h3>
+          {footerSocialLinks.map(({ label, href }) => (
+            <a key={label} rel="noreferrer noopener" href={href} className="opacity-60 hover:opacity-100">
+              {label}
+            </a>
+          ))}
         </div>
       </section>
 
       {/* Copyright & CTA */}
-      <section className="container pb-14 text-center">
-        <h3 className="text-sm opacity-80">
-          &copy; 2024 A Million Techies. Built for the community, by the community.
+      <section className="container px-4 pb-10 text-center">
+        <h3 className="text-sm leading-6 opacity-80 sm:text-base">
+          &copy; {currentYear} A Million Techies. Built for the community, by the community.
         </h3>
-        <h3 className="mt-2">
+        <h3 className="mt-2 text-sm leading-6 sm:text-base">
           Discover the community on amilliontechies.com and continue learning on learn.amilliontechies.com.
         </h3>
-        <h3 className="mt-2">
+        <h3 className="mt-2 text-sm leading-6 sm:text-base">
           Want to get involved?{" "}
           <a rel="noreferrer noopener" href="/join-us" className="text-primary transition-all border-primary hover:border-b-2">
             Join Us

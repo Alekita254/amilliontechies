@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiGetRequest } from "@/backend/functions";
 
-type StatusFilter = "ALL" | "UPCOMING" | "ACTIVE" | "COMPLETED";
+type CohortStatus = "UPCOMING" | "ACTIVE" | "COMPLETED";
+type CohortFilter = "PRESENT" | "PAST";
 
 type Cohort = {
   title: string;
   slug: string;
-  status: "UPCOMING" | "ACTIVE" | "COMPLETED";
+  status: CohortStatus;
   short_description?: string;
   description?: string;
   duration?: string;
@@ -19,15 +20,14 @@ type Cohort = {
   program_type?: string;
 };
 
-const statusClasses: Record<StatusFilter, string> = {
-  ALL: "",
+const statusClasses: Record<CohortStatus, string> = {
   UPCOMING: "bg-blue-100 text-blue-700 border-blue-200",
   ACTIVE: "bg-emerald-100 text-emerald-700 border-emerald-200",
   COMPLETED: "bg-slate-100 text-slate-700 border-slate-200",
 };
 
 export function CohortsPage() {
-  const [status, setStatus] = useState<StatusFilter>("ALL");
+  const [filter, setFilter] = useState<CohortFilter>("PRESENT");
   const [cohorts, setCohorts] = useState<Cohort[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,9 +65,12 @@ export function CohortsPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    if (status === "ALL") return cohorts;
-    return cohorts.filter((cohort) => cohort.status === status);
-  }, [status]);
+    if (filter === "PRESENT") {
+      return cohorts.filter((cohort) => cohort.status === "ACTIVE");
+    }
+
+    return cohorts.filter((cohort) => cohort.status !== "ACTIVE");
+  }, [cohorts, filter]);
 
   if (loading) {
     return (
@@ -92,25 +95,39 @@ export function CohortsPage() {
       <section className="max-w-3xl">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Cohorts</h1>
         <p className="mt-3 text-muted-foreground text-lg">
-          Explore current, upcoming, and completed cohorts in the A Million Techies community.
+          Explore active and past cohorts in the A Million Techies community.
         </p>
       </section>
 
-      <section className="mt-8 flex flex-wrap gap-2">
-        {(["ALL", "UPCOMING", "ACTIVE", "COMPLETED"] as StatusFilter[]).map((item) => (
-          <Button
-            key={item}
-            variant={status === item ? "default" : "outline"}
-            onClick={() => setStatus(item)}
-          >
-            {item}
-          </Button>
-        ))}
+      <section className="mt-8">
+        <div className="inline-flex rounded-xl border border-border/80 bg-muted/40 p-1">
+          {([
+            { key: "PRESENT", label: "Present" },
+            { key: "PAST", label: "Past Cohorts" },
+          ] as const).map((item) => (
+            <Button
+              key={item.key}
+              variant="ghost"
+              onClick={() => setFilter(item.key)}
+              className={
+                filter === item.key
+                  ? "rounded-lg bg-background shadow-sm text-foreground"
+                  : "rounded-lg text-muted-foreground hover:text-foreground"
+              }
+            >
+              {item.label}
+            </Button>
+          ))}
+        </div>
       </section>
 
       <section className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
         {filtered.length === 0 && (
-          <p className="text-muted-foreground">No cohorts have been published yet.</p>
+          <p className="text-muted-foreground">
+            {filter === "PRESENT"
+              ? "No active cohorts are available right now."
+              : "No past cohorts have been published yet."}
+          </p>
         )}
         {filtered.map((cohort) => (
           <Card key={cohort.slug} className="border-zinc-200/80">

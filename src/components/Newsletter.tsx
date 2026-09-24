@@ -29,20 +29,20 @@ export const Newsletter = () => {
     <section id="newsletter">
       <hr className="w-11/12 mx-auto" />
 
-      <div className="container py-24 sm:py-32 text-center">
-        <h3 className="text-4xl md:text-5xl font-bold">
+      <div className="container px-4 py-24 text-center sm:py-32">
+        <h3 className="text-3xl font-bold sm:text-4xl md:text-5xl">
           Join Our{" "}
           <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
             Newsletter
           </span>
         </h3>
-        <p className="text-xl text-muted-foreground mt-4 mb-8">
+        <p className="mx-auto mt-4 mb-8 max-w-3xl text-base text-muted-foreground sm:text-lg lg:text-xl">
           Stay updated with the latest insights, events, and opportunities in the tech world.
         </p>
 
         {!subscribed ? (
           <form
-            className="flex flex-col md:flex-row md:w-6/12 lg:w-4/12 mx-auto gap-4 md:gap-2"
+            className="mx-auto flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:items-center"
             onSubmit={handleSubmit}
           >
             <label htmlFor="email" className="sr-only">
@@ -54,17 +54,17 @@ export const Newsletter = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="yourname@example.com"
-              className="bg-muted/50 dark:bg-muted/80"
+              className="bg-muted/50 dark:bg-muted/80 sm:flex-1"
               required
             />
-            <Button type="submit" disabled={loading} className="flex items-center gap-2">
+            <Button type="submit" disabled={loading} className="flex w-full items-center justify-center gap-2 sm:w-auto">
               {loading ? <Loader2 className="animate-spin w-4 h-4" /> : "Subscribe"}
             </Button>
           </form>
         ) : (
           <div className="flex flex-col items-center justify-center mt-6">
             <MailCheck className="w-10 h-10 text-green-500" />
-            <p className="text-lg font-semibold mt-2 text-green-500">You're subscribed! 🎉</p>
+            <p className="mt-2 text-base font-semibold text-green-500 sm:text-lg">You're subscribed! 🎉</p>
           </div>
         )}
       </div>

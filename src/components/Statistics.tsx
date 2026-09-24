@@ -25,14 +25,14 @@ export const Statistics = () => {
 
   return (
     <section id="statistics">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {stats.map(({ quantity, description }: statsProps) => (
           <div
             key={description}
-            className="space-y-2 text-center"
+            className="rounded-xl border border-border/60 bg-background/70 p-3 text-center sm:p-4"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold ">{quantity}</h2>
-            <p className="text-xl text-muted-foreground">{description}</p>
+            <h2 className="text-2xl font-bold sm:text-3xl">{quantity}</h2>
+            <p className="mt-1 text-xs text-muted-foreground sm:text-sm lg:text-base">{description}</p>
           </div>
         ))}
       </div>

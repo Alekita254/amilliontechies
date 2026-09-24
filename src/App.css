@@ -118,7 +118,18 @@
   * {
     @apply border-border;
   }
+
+  html,
+  body,
+  #root {
+    overflow-x: hidden;
+  }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  img {
+    @apply h-auto max-w-full;
   }
 }

@@ -17,14 +17,14 @@ export const HeroCards = () => {
 
 
   return (
-    <div className="hidden lg:flex flex-row flex-wrap gap-8 relative w-[700px] h-[500px]">
+    <div className="relative hidden w-full max-w-[620px] flex-row flex-wrap gap-8 lg:flex xl:max-w-[700px]">
           <motion.div
             variants={floatingAnimation}
             initial="initial"
             animate="animate"
             className="w-full flex justify-center"
           >
-        <div className="relative aspect-square 
+        <div className="relative w-full max-w-[520px] aspect-square 
             bg-white/70 dark:bg-black/30 
             backdrop-blur-md 
             rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-gray-700">
