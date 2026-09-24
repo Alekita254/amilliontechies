@@ -1,7 +1,15 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCohortPeople, getInitials } from "@/assets/cohortPeople";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CohortPerson, getCohortPeople, getInitials } from "@/assets/cohortPeople";
 
 type PersonKind = "mentees" | "mentors";
 
@@ -14,6 +22,7 @@ export function CohortPeoplePage({ kind }: CohortPeoplePageProps) {
   const peopleData = getCohortPeople(slug);
   const people = kind === "mentees" ? peopleData.mentees : peopleData.mentors;
   const title = kind === "mentees" ? "Mentees" : "Mentors";
+  const [selectedPerson, setSelectedPerson] = useState<CohortPerson | null>(null);
 
   return (
     <main className="container py-12 md:py-16 space-y-8">
@@ -27,24 +36,56 @@ export function CohortPeoplePage({ kind }: CohortPeoplePageProps) {
         </Button>
       </section>
 
-      <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <section className="grid grid-cols-3 gap-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
         {people.map((person) => (
-          <Card key={person.id}>
-            <CardHeader className="space-y-3">
-              <div className="h-11 w-11 rounded-full bg-primary/15 text-primary text-sm font-semibold flex items-center justify-center">
-                {getInitials(person.name)}
-              </div>
-              <div>
-                <CardTitle>{person.name}</CardTitle>
-                <CardDescription className="mt-1">{person.title}</CardDescription>
+          <Card key={person.id} className="h-full border-border/70">
+            <CardHeader className="space-y-3 pb-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+                  {getInitials(person.name)}
+                </div>
+                <div className="min-w-0">
+                  <CardTitle className="truncate text-lg">{person.name}</CardTitle>
+                  <CardDescription className="mt-1 truncate">{person.title}</CardDescription>
+                </div>
               </div>
             </CardHeader>
-            <CardContent className="text-sm text-muted-foreground leading-6">
-              {person.summary}
+
+            <CardContent className="flex h-[calc(100%-6.5rem)] flex-col justify-between gap-3">
+              <p className="line-clamp-3 text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6">{person.summary}</p>
+
+              <button
+                type="button"
+                className="inline-flex w-full items-center justify-between rounded-md border border-border/70 px-2 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/5 sm:px-3 sm:py-2 sm:text-sm"
+                onClick={() => setSelectedPerson(person)}
+              >
+                <span>More of me</span>
+                <span aria-hidden>→</span>
+              </button>
             </CardContent>
           </Card>
         ))}
       </section>
+
+      <Dialog open={Boolean(selectedPerson)} onOpenChange={(open) => !open && setSelectedPerson(null)}>
+        <DialogContent className="sm:max-w-xl">
+          {selectedPerson && (
+            <>
+              <DialogHeader>
+                <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+                  {getInitials(selectedPerson.name)}
+                </div>
+                <DialogTitle>{selectedPerson.name}</DialogTitle>
+                <DialogDescription>{selectedPerson.title}</DialogDescription>
+              </DialogHeader>
+
+              <div className="text-sm leading-7 text-muted-foreground">
+                {selectedPerson.summary}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
