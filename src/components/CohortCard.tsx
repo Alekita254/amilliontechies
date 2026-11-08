@@ -21,6 +21,8 @@ export interface CohortCardData {
   learner_count?: number;
   mentor_count?: number;
   program_type?: string;
+  start_date?: string | null;
+  end_date?: string | null;
 }
 
 const statusClasses: Record<CohortStatus, string> = {

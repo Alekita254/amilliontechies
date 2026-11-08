@@ -1,12 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { apiGetRequest } from "@/backend/functions";
-import { CohortCard, CohortCardData } from "@/components/CohortCard";
+import { CohortCard, CohortCardData, CohortStatus } from "@/components/CohortCard";
 
-type CohortFilter = "PRESENT" | "PAST";
+const time = (d?: string | null) => (d ? Date.parse(d) : NaN);
+// Dated cohorts first; undated ones sink to the bottom of their section.
+const byDate = (key: "start_date" | "end_date", dir: 1 | -1) => (a: CohortCardData, b: CohortCardData) => {
+  const [x, y] = [time(a[key] ?? a.start_date), time(b[key] ?? b.start_date)];
+  if (Number.isNaN(x) && Number.isNaN(y)) return 0;
+  if (Number.isNaN(x)) return 1;
+  if (Number.isNaN(y)) return -1;
+  return (x - y) * dir;
+};
+
+// What people most want to see first: what they can still join, then what is running, then history.
+const SECTIONS: { status: CohortStatus; title: string; hint: string; sort: (a: CohortCardData, b: CohortCardData) => number }[] = [
+  { status: "UPCOMING", title: "Upcoming", hint: "Starting soon. Have a look and register.", sort: byDate("start_date", 1) },
+  { status: "ACTIVE", title: "Present", hint: "Running right now.", sort: byDate("start_date", 1) },
+  { status: "COMPLETED", title: "Past", hint: "Cohorts we have already completed.", sort: byDate("end_date", -1) },
+];
 
 export function CohortsPage() {
-  const [filter, setFilter] = useState<CohortFilter>("PRESENT");
   const [cohorts, setCohorts] = useState<CohortCardData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,13 +56,10 @@ export function CohortsPage() {
     loadCohorts();
   }, []);
 
-  const filtered = useMemo(() => {
-    if (filter === "PRESENT") {
-      return cohorts.filter((cohort) => cohort.status === "ACTIVE");
-    }
-
-    return cohorts.filter((cohort) => cohort.status !== "ACTIVE");
-  }, [cohorts, filter]);
+  const groups = useMemo(
+    () => SECTIONS.map((section) => ({ ...section, items: cohorts.filter((c) => c.status === section.status).sort(section.sort) })),
+    [cohorts]
+  );
 
   if (loading) {
     return (
@@ -74,44 +84,28 @@ export function CohortsPage() {
       <section className="max-w-3xl">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Cohorts</h1>
         <p className="mt-3 text-muted-foreground text-lg">
-          Explore active and past cohorts in the A Million Techies community.
+          Explore upcoming, current and past cohorts in the A Million Techies community.
         </p>
       </section>
 
-      <section className="mt-8">
-        <div className="inline-flex rounded-xl border border-border/80 bg-muted/40 p-1">
-          {([
-            { key: "PRESENT", label: "Present" },
-            { key: "PAST", label: "Past Cohorts" },
-          ] as const).map((item) => (
-            <Button
-              key={item.key}
-              variant="ghost"
-              onClick={() => setFilter(item.key)}
-              className={
-                filter === item.key
-                  ? "rounded-lg bg-background shadow-sm text-foreground"
-                  : "rounded-lg text-muted-foreground hover:text-foreground"
-              }
-            >
-              {item.label}
-            </Button>
-          ))}
-        </div>
-      </section>
+      {groups.every((g) => g.items.length === 0) && (
+        <p className="mt-8 text-muted-foreground">No cohorts have been published yet.</p>
+      )}
 
-      <section className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filtered.length === 0 && (
-          <p className="text-muted-foreground">
-            {filter === "PRESENT"
-              ? "No active cohorts are available right now."
-              : "No past cohorts have been published yet."}
-          </p>
-        )}
-        {filtered.map((cohort) => (
-          <CohortCard key={cohort.slug} cohort={cohort} />
-        ))}
-      </section>
+      {groups.map(
+        (group) =>
+          group.items.length > 0 && (
+            <section key={group.status} className="mt-10">
+              <h2 className="text-2xl font-semibold tracking-tight">{group.title}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{group.hint}</p>
+              <div className="mt-5 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {group.items.map((cohort) => (
+                  <CohortCard key={cohort.slug} cohort={cohort} />
+                ))}
+              </div>
+            </section>
+          )
+      )}
     </main>
   );
 }
