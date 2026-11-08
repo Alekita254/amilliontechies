@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiGetRequest } from "@/backend/functions";
 import { getCohortPeople, getInitials } from "@/assets/cohortPeople";
+import { CohortRegistration } from "@/components/CohortRegistration";
 
 type Cohort = {
   title: string;
@@ -14,6 +15,8 @@ type Cohort = {
   duration?: string;
   learner_count?: number;
   mentor_count?: number;
+  registration_state?: "open" | "closed" | "full";
+  seats_left?: number | null;
 };
 
 export function CohortDetailPage() {
@@ -86,8 +89,8 @@ export function CohortDetailPage() {
   }
 
   const { mentees, mentors } = getCohortPeople(cohort.slug);
-  const menteeCount = Math.max(cohort.learner_count ?? 0, mentees.length);
-  const mentorCount = Math.max(cohort.mentor_count ?? 0, mentors.length);
+  const menteeCount = cohort.learner_count ?? 0;
+  const mentorCount = cohort.mentor_count ?? 0;
   const menteePreview = mentees.slice(0, 2);
   const mentorPreview = mentors.slice(0, 2);
   const extraMentees = Math.max(0, menteeCount - menteePreview.length);
@@ -208,9 +211,7 @@ export function CohortDetailPage() {
       </section>
 
       <section className="flex flex-col gap-3 sm:flex-row">
-        <Button asChild>
-          <Link to="/joinus">Apply / Join</Link>
-        </Button>
+        <CohortRegistration cohort={cohort} />
         <Button asChild variant="outline">
           <Link to="/projects">See Related Projects</Link>
         </Button>
