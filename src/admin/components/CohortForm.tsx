@@ -16,15 +16,17 @@ type CohortFormData = {
   status: CohortStatus;
   start_date: string;
   end_date: string;
-  learner_count: number;
-  mentor_count: number;
+  capacity: string; // text so it can be empty (= no limit)
   featured: boolean;
   published: boolean;
+  registration_open: boolean;
 };
 
-type CohortInput = Partial<CohortFormData> & {
+type CohortInput = Partial<Omit<CohortFormData, "capacity">> & {
   id?: number;
   slug?: string;
+  capacity?: number | null;
+  seats_taken?: number;
 };
 
 const initialState: CohortFormData = {
@@ -35,10 +37,10 @@ const initialState: CohortFormData = {
   status: "UPCOMING",
   start_date: "",
   end_date: "",
-  learner_count: 0,
-  mentor_count: 0,
+  capacity: "",
   featured: false,
   published: false,
+  registration_open: false,
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -107,10 +109,10 @@ export function CohortForm({
       status: cohort.status || "UPCOMING",
       start_date: cohort.start_date || "",
       end_date: cohort.end_date || "",
-      learner_count: Number(cohort.learner_count || 0),
-      mentor_count: Number(cohort.mentor_count || 0),
+      capacity: cohort.capacity == null ? "" : String(cohort.capacity),
       featured: Boolean(cohort.featured),
       published: Boolean(cohort.published),
+      registration_open: Boolean(cohort.registration_open),
     });
   }, [cohort]);
 
@@ -123,11 +125,6 @@ export function CohortForm({
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData((prev) => ({ ...prev, [name]: checked }));
-      return;
-    }
-
-    if (name === "learner_count" || name === "mentor_count") {
-      setFormData((prev) => ({ ...prev, [name]: Number(value) }));
       return;
     }
 
@@ -150,8 +147,7 @@ export function CohortForm({
         ...formData,
         start_date: formData.start_date || null,
         end_date: formData.end_date || null,
-        learner_count: Number(formData.learner_count),
-        mentor_count: Number(formData.mentor_count),
+        capacity: formData.capacity === "" ? null : Number(formData.capacity),
       };
 
       if (cohort?.slug) {
@@ -207,15 +203,26 @@ export function CohortForm({
         </div>
       </Section>
 
-      <Section title="People">
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field label="Learners" htmlFor="learner_count">
-            <Input id="learner_count" name="learner_count" type="number" min={0} value={formData.learner_count} onChange={handleChange} />
-          </Field>
-          <Field label="Mentors" htmlFor="mentor_count">
-            <Input id="mentor_count" name="mentor_count" type="number" min={0} value={formData.mentor_count} onChange={handleChange} />
+      <Section title="Registration">
+        <div className="grid gap-3 md:grid-cols-2">
+          <Toggle
+            name="registration_open"
+            checked={formData.registration_open}
+            onChange={handleChange}
+            label="Registration open"
+            text="People can apply on the website. The cohort must also be published."
+          />
+          <Field
+            label="Mentee seats"
+            htmlFor="capacity"
+            hint={`Leave empty for no limit.${cohort?.seats_taken != null ? ` ${cohort.seats_taken} taken so far.` : ""}`}
+          >
+            <Input id="capacity" name="capacity" type="number" min={0} value={formData.capacity} onChange={handleChange} />
           </Field>
         </div>
+        <p className="text-xs text-muted-foreground">
+          Learner and mentor counts are worked out automatically from approved members.
+        </p>
       </Section>
 
       <Section title="Details">

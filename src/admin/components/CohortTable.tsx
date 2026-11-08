@@ -26,6 +26,7 @@ type Cohort = {
   start_date?: string | null;
   end_date?: string | null;
   published?: boolean;
+  pending_count?: number;
 };
 
 const STATUS: Record<Status, { label: string; tone: "blue" | "green" | "gray" }> = {
@@ -95,6 +96,9 @@ export function CohortTable({
             <p className="truncate text-xs text-muted-foreground">
               {row.original.program_type || "No program set"}
             </p>
+            {!!row.original.pending_count && (
+              <Pill tone="amber" className="mt-1">{row.original.pending_count} pending</Pill>
+            )}
           </div>
         ),
       },
