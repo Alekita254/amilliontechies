@@ -3,7 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiGetRequest } from "@/backend/functions";
-import { getCohortPeople, getInitials } from "@/assets/cohortPeople";
+import { getInitials } from "@/assets/cohortPeople";
+import { useCohortPeople } from "@/hooks/useCohortPeople";
 import { CohortRegistration } from "@/components/CohortRegistration";
 
 type Cohort = {
@@ -24,6 +25,7 @@ export function CohortDetailPage() {
   const [cohort, setCohort] = useState<Cohort | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { people } = useCohortPeople(slug);
 
   useEffect(() => {
     const loadCohort = async () => {
@@ -88,7 +90,8 @@ export function CohortDetailPage() {
     );
   }
 
-  const { mentees, mentors } = getCohortPeople(cohort.slug);
+  const mentees = people.filter((p) => p.role === "MENTEE");
+  const mentors = people.filter((p) => p.role === "MENTOR");
   const menteeCount = cohort.learner_count ?? 0;
   const mentorCount = cohort.mentor_count ?? 0;
   const menteePreview = mentees.slice(0, 2);
@@ -124,7 +127,7 @@ export function CohortDetailPage() {
                       key={person.id}
                       className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-background bg-primary/15 text-[10px] font-semibold text-primary sm:h-9 sm:w-9 sm:text-[11px]"
                     >
-                      {getInitials(person.name)}
+                      {getInitials(person.full_name)}
                     </div>
                   ))}
                   {extraMentees > 0 && (
@@ -152,7 +155,7 @@ export function CohortDetailPage() {
                       key={person.id}
                       className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-background bg-emerald-100 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 sm:h-9 sm:w-9 sm:text-[11px]"
                     >
-                      {getInitials(person.name)}
+                      {getInitials(person.full_name)}
                     </div>
                   ))}
                   {extraMentors > 0 && (

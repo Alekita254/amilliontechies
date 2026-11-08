@@ -9,7 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CohortPerson, getCohortPeople, getInitials } from "@/assets/cohortPeople";
+import { getInitials } from "@/assets/cohortPeople";
+import { CohortPerson, useCohortPeople } from "@/hooks/useCohortPeople";
 
 type PersonKind = "mentees" | "mentors";
 
@@ -19,8 +20,8 @@ interface CohortPeoplePageProps {
 
 export function CohortPeoplePage({ kind }: CohortPeoplePageProps) {
   const { slug } = useParams();
-  const peopleData = getCohortPeople(slug);
-  const people = kind === "mentees" ? peopleData.mentees : peopleData.mentors;
+  const { people: everyone, loading, error, reload } = useCohortPeople(slug);
+  const people = everyone.filter((p) => p.role === (kind === "mentees" ? "MENTEE" : "MENTOR"));
   const title = kind === "mentees" ? "Mentees" : "Mentors";
   const [selectedPerson, setSelectedPerson] = useState<CohortPerson | null>(null);
 
@@ -29,43 +30,54 @@ export function CohortPeoplePage({ kind }: CohortPeoplePageProps) {
       <section className="space-y-3">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{title}</h1>
         <p className="text-lg text-muted-foreground max-w-3xl">
-          A quick summary of everyone currently visible in this cohort.
+          People in this cohort who chose to be shown here.
         </p>
         <Button asChild variant="link" className="px-0">
           <Link to={`/cohorts/${slug}`}>Back to Cohort Detail</Link>
         </Button>
       </section>
 
-      <section className="grid grid-cols-3 gap-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
-        {people.map((person) => (
-          <Card key={person.id} className="h-full border-border/70">
-            <CardHeader className="space-y-3 pb-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
-                  {getInitials(person.name)}
+      {loading ? (
+        <p className="text-muted-foreground">Loading…</p>
+      ) : error ? (
+        <div className="space-y-3">
+          <p className="text-muted-foreground">{error}</p>
+          <Button variant="outline" onClick={reload}>Try again</Button>
+        </div>
+      ) : people.length === 0 ? (
+        <p className="text-muted-foreground">No {title.toLowerCase()} have chosen to be shown yet.</p>
+      ) : (
+        <section className="grid grid-cols-3 gap-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
+          {people.map((person) => (
+            <Card key={person.id} className="h-full border-border/70">
+              <CardHeader className="space-y-3 pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+                    {getInitials(person.full_name)}
+                  </div>
+                  <div className="min-w-0">
+                    <CardTitle className="truncate text-lg">{person.full_name}</CardTitle>
+                    <CardDescription className="mt-1 truncate">{person.headline}</CardDescription>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <CardTitle className="truncate text-lg">{person.name}</CardTitle>
-                  <CardDescription className="mt-1 truncate">{person.title}</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
+              </CardHeader>
 
-            <CardContent className="flex h-[calc(100%-6.5rem)] flex-col justify-between gap-3">
-              <p className="line-clamp-3 text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6">{person.summary}</p>
+              <CardContent className="flex h-[calc(100%-6.5rem)] flex-col justify-between gap-3">
+                <p className="line-clamp-3 text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6">{person.about}</p>
 
-              <button
-                type="button"
-                className="inline-flex w-full items-center justify-between rounded-md border border-border/70 px-2 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/5 sm:px-3 sm:py-2 sm:text-sm"
-                onClick={() => setSelectedPerson(person)}
-              >
-                <span>More of me</span>
-                <span aria-hidden>→</span>
-              </button>
-            </CardContent>
-          </Card>
-        ))}
-      </section>
+                <button
+                  type="button"
+                  className="inline-flex w-full items-center justify-between rounded-md border border-border/70 px-2 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/5 sm:px-3 sm:py-2 sm:text-sm"
+                  onClick={() => setSelectedPerson(person)}
+                >
+                  <span>More of me</span>
+                  <span aria-hidden>→</span>
+                </button>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+      )}
 
       <Dialog open={Boolean(selectedPerson)} onOpenChange={(open) => !open && setSelectedPerson(null)}>
         <DialogContent className="sm:max-w-xl">
@@ -73,14 +85,14 @@ export function CohortPeoplePage({ kind }: CohortPeoplePageProps) {
             <>
               <DialogHeader>
                 <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
-                  {getInitials(selectedPerson.name)}
+                  {getInitials(selectedPerson.full_name)}
                 </div>
-                <DialogTitle>{selectedPerson.name}</DialogTitle>
-                <DialogDescription>{selectedPerson.title}</DialogDescription>
+                <DialogTitle>{selectedPerson.full_name}</DialogTitle>
+                <DialogDescription>{selectedPerson.headline}</DialogDescription>
               </DialogHeader>
 
-              <div className="text-sm leading-7 text-muted-foreground">
-                {selectedPerson.summary}
+              <div className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
+                {selectedPerson.about}
               </div>
             </>
           )}
