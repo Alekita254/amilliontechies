@@ -18,6 +18,13 @@ import {
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+declare module "@tanstack/react-table" {
+  // Lets a column opt out of small screens, e.g. meta: { className: "hidden md:table-cell" }
+  interface ColumnMeta<TData, TValue> {
+    className?: string;
+  }
+}
+
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
@@ -42,7 +49,7 @@ export function DataTable<TData>({ columns, data, empty, onRowClick }: DataTable
 
   return (
     <div className="overflow-x-auto">
-      <Table className="min-w-[640px]">
+      <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="hover:bg-transparent">
@@ -54,7 +61,8 @@ export function DataTable<TData>({ columns, data, empty, onRowClick }: DataTable
                   <TableHead
                     key={header.id}
                     className={cn(
-                      "h-11 px-4 text-xs font-medium uppercase tracking-wide text-muted-foreground",
+                      "h-11 px-3 text-xs font-medium uppercase sm:px-4 tracking-wide text-muted-foreground",
+                      header.column.columnDef.meta?.className,
                       canSort && "cursor-pointer select-none hover:text-foreground"
                     )}
                     onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
@@ -77,7 +85,7 @@ export function DataTable<TData>({ columns, data, empty, onRowClick }: DataTable
               onClick={onRowClick ? () => onRowClick(row.original) : undefined}
             >
               {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id} className="px-4 py-3.5">
+                <TableCell key={cell.id} className={cn("px-3 py-3.5 sm:px-4", cell.column.columnDef.meta?.className)}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}

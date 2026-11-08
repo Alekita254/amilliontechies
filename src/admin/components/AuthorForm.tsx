@@ -1,125 +1,106 @@
-import { useState, useEffect } from "react";
-import { apiFormDataPatchRequest, apiFormDataPostRequest } from "@/backend/functions";
+import { useEffect, useMemo, useState } from "react";
+import { Camera } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { apiFormDataPatchRequest, apiFormDataPostRequest } from "@/backend/functions";
+import { errorText } from "../lib/errors";
+import { Field } from "./Field";
+import type { Author } from "./AuthorList";
 
-export function AuthorForm({ author, onSuccess }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    bio: "",
-    profile_picture: null,
-  });
-
-  const [existingPic, setExistingPic] = useState(null);
+export function AuthorForm({
+  author,
+  onSuccess,
+  onCancel,
+}: {
+  author?: Author | null;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}) {
+  const [form, setForm] = useState({ name: "", email: "", bio: "" });
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [existingPic, setExistingPic] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (author) {
-      setFormData({
-        name: author.name || "",
-        email: author.email || "",
-        bio: author.bio || "",
-        profile_picture: null,
-      });
-      setExistingPic(author.profile_picture || null);
-    }
+    setForm({ name: author?.name || "", email: author?.email || "", bio: author?.bio || "" });
+    setExistingPic(author?.profile_picture || null);
+    setPhoto(null);
   }, [author]);
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prev) => ({ ...prev, [name]: value }));
-  // };
+  const preview = useMemo(() => (photo ? URL.createObjectURL(photo) : null), [photo]);
+  useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-  
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, profile_picture: file }));
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    const payload = new FormData();
-    payload.append("name", formData.name);
-    payload.append("email", formData.email);
-    payload.append("bio", formData.bio);
-  
-    if (formData.profile_picture) {
-      payload.append("profile_picture", formData.profile_picture);
-    }
-
-    console.log("This is the data to be sent for either saving or update ", payload);
-  
+    setSaving(true);
     try {
-      const endpoint = author ? `authors/${author.id}/` : "authors/";
-      const response = author
-        ? await apiFormDataPatchRequest(endpoint, payload)
-        : await apiFormDataPostRequest(endpoint, payload); // <-- use this for POST
-  
-      if (response.success || response.id) {
-        toast.success(`Author ${author ? "updated" : "created"} successfully`);
-        onSuccess?.();
-      } else {
-        console.error("Backend response:", response);
-        toast.error("Submission failed: Check required fields");
-      }
+      const payload = new FormData();
+      payload.append("name", form.name);
+      payload.append("email", form.email);
+      payload.append("bio", form.bio);
+      if (photo) payload.append("profile_picture", photo);
+
+      if (author) await apiFormDataPatchRequest(`authors/${author.id}/`, payload);
+      else await apiFormDataPostRequest("authors/", payload);
+
+      toast.success(`Author ${author ? "updated" : "created"}`);
+      onSuccess?.();
     } catch (err) {
-      console.error("Submit error:", err);
-      toast.error("Something went wrong while submitting.");
+      toast.error(errorText(err, "Couldn't save the author"));
+    } finally {
+      setSaving(false);
     }
   };
-  
-  
+
+  const shown = preview || existingPic;
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        className="w-full border rounded p-2"
-        placeholder="Name"
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        className="w-full border rounded p-2"
-        placeholder="Email"
-        required
-      />
-      <textarea
-        name="bio"
-        value={formData.bio}
-        onChange={handleChange}
-        className="w-full border rounded p-2"
-        placeholder="Bio"
-      />
+    <form onSubmit={submit} className="space-y-5">
+      <div className="flex items-center gap-4">
+        <label className="group relative flex h-20 w-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed bg-muted/50 transition-colors hover:bg-muted">
+          {shown ? (
+            <img src={shown} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <Camera className="h-6 w-6 text-muted-foreground" />
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            className="sr-only"
+            onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
+          />
+        </label>
+        <div>
+          <p className="text-sm font-medium">Photo</p>
+          <p className="text-xs text-muted-foreground">Click the circle to {shown ? "change" : "add"} a photo (optional)</p>
+        </div>
+      </div>
 
-      <input type="file" accept="image/*" onChange={handleFileChange} />
-      {existingPic && !formData.profile_picture && (
-        <img
-          src={existingPic}
-          alt="Current profile"
-          className="mt-2 h-20 w-20 rounded-full object-cover"
-        />
-      )}
+      <Field label="Name" htmlFor="name">
+        <Input id="name" name="name" value={form.name} onChange={onChange} required />
+      </Field>
+      <Field label="Email" htmlFor="email" hint="Private — only visible to admins">
+        <Input id="email" name="email" type="email" value={form.email} onChange={onChange} required />
+      </Field>
+      <Field label="Bio" htmlFor="bio">
+        <Textarea id="bio" name="bio" rows={4} value={form.bio} onChange={onChange} />
+      </Field>
 
-      <button
-        type="submit"
-        className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
-      >
-        {author ? "Update" : "Create"} Author
-      </button>
+      <div className="flex justify-end gap-2 border-t pt-4">
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel} disabled={saving}>
+            Cancel
+          </Button>
+        )}
+        <Button type="submit" disabled={saving}>
+          {saving ? "Saving…" : author ? "Save changes" : "Create author"}
+        </Button>
+      </div>
     </form>
   );
 }

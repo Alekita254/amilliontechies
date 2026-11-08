@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { apiFormDataPatchRequest, apiFormDataPostRequest, apiGetRequest } from "@/backend/functions";
 import { cn } from "@/lib/utils";
 import { errorText } from "../lib/errors";
+import { POST_KINDS, cap, type PostKind } from "../lib/postKinds";
 import { Field, NativeSelect } from "./Field";
 import { PageHeader } from "./PageHeader";
 import { Pill } from "./Pill";
@@ -34,8 +35,9 @@ const quillModules = {
 
 const hasText = (html: string) => /<img/.test(html) || html.replace(/<[^>]*>/g, "").trim().length > 0;
 
-/** Create (no slug) or edit (slug) a blog post. */
-export function BlogEditor({ slug }: { slug?: string }) {
+/** Create (no slug) or edit (slug) a blog post or community event. */
+export function PostEditor({ slug, kind = "blog" }: { slug?: string; kind?: PostKind }) {
+  const c = POST_KINDS[kind];
   const isEdit = !!slug;
   const navigate = useNavigate();
 
@@ -55,7 +57,7 @@ export function BlogEditor({ slug }: { slug?: string }) {
       else toast.error("Couldn't load authors");
 
       if (slug) {
-        const res = await apiGetRequest(`blogs/${slug}/`);
+        const res = await apiGetRequest(`${c.resource}/${slug}/`);
         const b = res.data?.data;
         if (b) {
           setForm({
@@ -69,12 +71,12 @@ export function BlogEditor({ slug }: { slug?: string }) {
           setExistingCover(b.cover_image || null);
           setViews(b.views ?? 0);
         } else {
-          toast.error(res.message || "Couldn't load this blog");
+          toast.error(res.message || `Couldn't load this ${c.noun}`);
         }
         setLoading(false);
       }
     })();
-  }, [slug]);
+  }, [slug, c.resource, c.noun]);
 
   const preview = useMemo(() => (cover ? URL.createObjectURL(cover) : null), [cover]);
   useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
@@ -119,19 +121,19 @@ export function BlogEditor({ slug }: { slug?: string }) {
         const fd = new FormData();
         Object.entries(fields).forEach(([k, v]) => fd.append(k, String(v)));
         if (cover) fd.append("cover_image", cover);
-        await apiFormDataPatchRequest(`blogs/${slug}/`, fd);
-        toast.success("Blog updated");
+        await apiFormDataPatchRequest(`${c.resource}/${slug}/`, fd);
+        toast.success(`${cap(c.noun)} updated`);
       } else {
         // Create expects every field as one JSON blob, plus the file.
         const fd = new FormData();
         fd.append("data", JSON.stringify(fields));
         if (cover) fd.append("cover_image", cover);
-        await apiFormDataPostRequest("blogs/", fd);
-        toast.success("Blog published");
+        await apiFormDataPostRequest(`${c.resource}/`, fd);
+        toast.success(`${cap(c.noun)} published`);
       }
-      navigate("/admin/blog");
+      navigate(c.base);
     } catch (err) {
-      toast.error(errorText(err, "Couldn't save the blog"));
+      toast.error(errorText(err, `Couldn't save the ${c.noun}`));
     } finally {
       setSaving(false);
     }
@@ -143,16 +145,16 @@ export function BlogEditor({ slug }: { slug?: string }) {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <Link to="/admin/blog" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> Back to blogs
+      <Link to={c.base} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+        <ArrowLeft className="h-4 w-4" /> Back to {c.plural}
       </Link>
 
       <PageHeader
-        title={isEdit ? "Edit blog" : "New blog"}
-        description={isEdit ? "Update the post and save your changes." : "Write a post and publish it to the site."}
+        title={`${isEdit ? "Edit" : "New"} ${c.noun}`}
+        description={isEdit ? `Update the ${c.noun} and save your changes.` : c.createHint}
         action={
           isEdit && (
-            <a href={`/blog/${slug}`} target="_blank" rel="noreferrer">
+            <a href={`${c.siteBase}/${slug}`} target="_blank" rel="noreferrer">
               <Button variant="outline">
                 <ExternalLink className="mr-2 h-4 w-4" /> View on site
               </Button>
@@ -168,7 +170,7 @@ export function BlogEditor({ slug }: { slug?: string }) {
               <Field label="Title" htmlFor="title" error={errors.title}>
                 <Input id="title" name="title" value={form.title} onChange={onChange} placeholder="A clear, specific title" />
               </Field>
-              <Field label="Description" htmlFor="description" error={errors.description} hint="A one or two sentence summary shown in blog lists">
+              <Field label="Description" htmlFor="description" error={errors.description} hint="A one or two sentence summary shown in lists">
                 <Textarea id="description" name="description" rows={3} value={form.description} onChange={onChange} />
               </Field>
               <Field label="Content" error={errors.content}>
@@ -248,7 +250,7 @@ export function BlogEditor({ slug }: { slug?: string }) {
         </div>
 
         <div className="sticky bottom-0 -mx-4 flex justify-end gap-2 border-t bg-background/90 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:col-span-3 lg:-mx-8 lg:px-8">
-          <Button type="button" variant="outline" onClick={() => navigate("/admin/blog")} disabled={saving}>
+          <Button type="button" variant="outline" onClick={() => navigate(c.base)} disabled={saving}>
             Cancel
           </Button>
           <Button type="submit" disabled={saving}>

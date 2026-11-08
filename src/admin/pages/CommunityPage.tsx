@@ -1,27 +1,23 @@
-import { useState } from "react";
-import { BlogSummary } from "../components/BlogSummary";
-import { BlogForm } from "../components/BlogForm";
-import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BlogTable } from "../components/BlogTable";
 import { CommunityTable } from "../components/CommunityTable";
-import { CommunityForm } from "../components/CommunityForm";
+import { PageHeader } from "../components/PageHeader";
 
 export default function CommunityPage() {
-  const [showForm, setShowForm] = useState(false);
+  const navigate = useNavigate();
 
   return (
-    <div className="space-y-6 p-6">
-      <h1 className="text-2xl font-bold">Community / Events Management</h1>
-
-      <Button onClick={() => setShowForm(prev => !prev)}>
-        {showForm ? "Hide Community Form" : "Add New Community"}
-      </Button>
-
-      {showForm && <CommunityForm />}
-
-      <Separator />
-
+    <div className="space-y-6">
+      <PageHeader
+        title="Community"
+        description="Create and manage community events."
+        action={
+          <Button onClick={() => navigate("/admin/community/new")}>
+            <Plus className="mr-2 h-4 w-4" /> New event
+          </Button>
+        }
+      />
       <CommunityTable />
     </div>
   );

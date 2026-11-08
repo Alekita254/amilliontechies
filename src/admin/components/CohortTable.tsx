@@ -90,7 +90,7 @@ export function CohortTable({
         accessorKey: "title",
         header: "Cohort",
         cell: ({ row }) => (
-          <div className="min-w-0">
+          <div className="min-w-0 max-w-[9.5rem] sm:max-w-none">
             <p className="truncate font-medium">{row.original.title}</p>
             <p className="truncate text-xs text-muted-foreground">
               {row.original.program_type || "No program set"}
@@ -109,6 +109,7 @@ export function CohortTable({
       {
         id: "dates",
         header: "Dates",
+        meta: { className: "hidden lg:table-cell" },
         enableSorting: false,
         cell: ({ row }) => {
           const { start_date: s, end_date: e } = row.original;
@@ -122,6 +123,7 @@ export function CohortTable({
       {
         id: "people",
         header: "Learners / Mentors",
+        meta: { className: "hidden md:table-cell" },
         enableSorting: false,
         cell: ({ row }) => (
           <span className="text-sm">
@@ -133,6 +135,7 @@ export function CohortTable({
       {
         accessorKey: "published",
         header: "Visibility",
+        meta: { className: "hidden sm:table-cell" },
         cell: ({ getValue }) =>
           getValue<boolean>() ? <Pill tone="green">Published</Pill> : <Pill tone="amber">Draft</Pill>,
       },
@@ -145,6 +148,7 @@ export function CohortTable({
             <Button
               variant="ghost"
               size="icon"
+              className="h-9 w-9"
               title="Edit"
               onClick={() => navigate(`/admin/cohorts/${row.original.slug}/edit`)}
             >
@@ -155,7 +159,7 @@ export function CohortTable({
               variant="ghost"
               size="icon"
               title="Delete"
-              className="text-muted-foreground hover:text-destructive"
+              className="h-9 w-9 text-muted-foreground hover:text-destructive"
               onClick={() => setToDelete(row.original)}
             >
               <Trash2 className="h-4 w-4" />

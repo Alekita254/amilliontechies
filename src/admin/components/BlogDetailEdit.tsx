@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
-import { BlogEditor } from "./BlogEditor";
+import { PostEditor } from "./PostEditor";
 
 export function BlogDetailEdit() {
   const { slug } = useParams();
-  return <BlogEditor slug={slug} />;
+  return <PostEditor kind="blog" slug={slug} />;
 }

@@ -10,6 +10,7 @@ import { AuthorList } from "@/admin/components/AuthorList";
 import { AuthorForm } from "@/admin/components/AuthorForm";
 import CommunityPage from "@/admin/pages/CommunityPage";
 import { CommunityDetailEdit } from "@/admin/components/CommunityDetailEdit";
+import { CommunityForm } from "@/admin/components/CommunityForm";
 import { ProfilePage } from "@/admin/pages/ProfilePage";
 import { UserProfile } from "@/admin/components/profile";
 import CohortPage from "@/admin/pages/CohortPage";
@@ -31,6 +32,7 @@ export function AdminRoutes() {
           <Route path="author/create" element={<AuthorForm author={null} onSuccess={() => {}} />} />
           <Route path="author/edit/:id" element={<AuthorForm author={null} onSuccess={() => {}} />} />
           <Route path="community" element={<CommunityPage />} />
+          <Route path="community/new" element={<CommunityForm />} />
           <Route path="community/:slug/edit" element={<CommunityDetailEdit />} />
           <Route path="community/:slug" element={<CommunityDetailEdit />} />
           <Route path="cohorts" element={<CohortPage />} />

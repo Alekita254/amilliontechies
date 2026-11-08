@@ -1,5 +1,5 @@
-import { BlogEditor } from "./BlogEditor";
+import { PostEditor } from "./PostEditor";
 
 export function BlogForm() {
-  return <BlogEditor />;
+  return <PostEditor kind="blog" />;
 }
