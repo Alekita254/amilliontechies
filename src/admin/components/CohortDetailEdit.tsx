@@ -1,88 +1,60 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CohortForm } from "@/admin/components/CohortForm";
+import { PageHeader } from "@/admin/components/PageHeader";
 import { apiGetRequest } from "@/backend/functions";
-import { toast } from "sonner";
-
-type Cohort = {
-  id: number;
-  title: string;
-  slug: string;
-  short_description?: string;
-  description?: string;
-  program_type?: string;
-  status: "UPCOMING" | "ACTIVE" | "COMPLETED";
-  start_date?: string;
-  end_date?: string;
-  learner_count?: number;
-  mentor_count?: number;
-  featured?: boolean;
-  published?: boolean;
-};
 
 export function CohortDetailEdit() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [cohort, setCohort] = useState<Cohort | null>(null);
+  const [cohort, setCohort] = useState<any>(null);
 
   useEffect(() => {
-    const load = async () => {
-      if (!slug) {
-        setLoading(false);
-        return;
-      }
-
-      const candidates = [`cohorts/${slug}/`, `public/cohorts/${slug}/`];
-
-      for (const endpoint of candidates) {
-        const res = await apiGetRequest(endpoint);
-        const payload = res?.data;
-        const item = payload?.data || payload;
-
-        if (item && typeof item === "object" && item.slug) {
-          setCohort(item as Cohort);
-          setLoading(false);
-          return;
-        }
-      }
-
-      toast.error("Failed to load cohort");
+    (async () => {
+      const res = await apiGetRequest(`cohorts/${slug}/`);
+      const item = res.data?.data;
+      if (item?.slug) setCohort(item);
       setLoading(false);
-    };
-
-    load();
+    })();
   }, [slug]);
 
+  const back = (
+    <Link to="/admin/cohorts" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <ArrowLeft className="h-4 w-4" /> Back to cohorts
+    </Link>
+  );
+
   if (loading) {
-    return <p className="p-6">Loading cohort...</p>;
+    return <div className="mx-auto h-96 max-w-3xl animate-pulse rounded-xl bg-muted" />;
   }
 
   if (!cohort) {
     return (
-      <div className="p-6 space-y-3">
-        <p className="text-red-600">Cohort not found.</p>
+      <Card className="mx-auto mt-10 max-w-md space-y-3 p-8 text-center">
+        <p className="font-semibold">Cohort not found</p>
+        <p className="text-sm text-muted-foreground">It may have been deleted, or you may not have access.</p>
         <Button variant="outline" onClick={() => navigate("/admin/cohorts")}>Back to cohorts</Button>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <Card className="mt-6 max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle>Edit Cohort: {cohort.title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CohortForm
-          cohort={cohort}
-          onSuccess={() => {
-            toast.success("Cohort saved");
-            navigate("/admin/cohorts");
-          }}
-        />
-      </CardContent>
-    </Card>
+    <div className="mx-auto max-w-3xl space-y-6">
+      {back}
+      <PageHeader title={cohort.title} description="Edit this cohort's details." />
+      <Card>
+        <CardContent className="p-6">
+          <CohortForm
+            cohort={cohort}
+            onCancel={() => navigate("/admin/cohorts")}
+            onSuccess={() => navigate("/admin/cohorts")}
+          />
+        </CardContent>
+      </Card>
+    </div>
   );
 }

@@ -1,0 +1,24 @@
+/* Rich-text editor (Quill) that follows the light/dark theme */
+.blog-editor .ql-toolbar.ql-snow {
+  border-color: hsl(var(--border));
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: hsl(var(--muted) / 0.5);
+}
+.blog-editor .ql-container.ql-snow {
+  border-color: hsl(var(--border));
+  border-radius: 0 0 var(--radius) var(--radius);
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 15px;
+}
+.blog-editor .ql-editor { min-height: 340px; line-height: 1.7; }
+.blog-editor .ql-editor.ql-blank::before { color: hsl(var(--muted-foreground)); font-style: normal; }
+.dark .blog-editor .ql-snow .ql-stroke { stroke: hsl(var(--foreground)); }
+.dark .blog-editor .ql-snow .ql-fill { fill: hsl(var(--foreground)); }
+.dark .blog-editor .ql-snow .ql-picker { color: hsl(var(--foreground)); }
+.dark .blog-editor .ql-snow .ql-picker-options {
+  background: hsl(var(--popover));
+  border-color: hsl(var(--border));
+}
+.dark .blog-editor .ql-snow.ql-toolbar button:hover .ql-stroke,
+.dark .blog-editor .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke { stroke: hsl(var(--primary)); }

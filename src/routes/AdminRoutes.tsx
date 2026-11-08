@@ -5,6 +5,7 @@ import  DashboardPage from "../admin/DashboardPage";
 import  BlogPage  from "../admin/pages/BlogPage";
 import AuthorPage from "@/admin/pages/AurthorPage";
 import { BlogDetailEdit } from "../admin/components/BlogDetailEdit";
+import { BlogForm } from "../admin/components/BlogForm";
 import { AuthorList } from "@/admin/components/AuthorList";
 import { AuthorForm } from "@/admin/components/AuthorForm";
 import CommunityPage from "@/admin/pages/CommunityPage";
@@ -23,6 +24,7 @@ export function AdminRoutes() {
         <Route path="/admin" element={<DashboardLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="blog" element={<BlogPage />} />
+          <Route path="blog/new" element={<BlogForm />} />
           <Route path="blog/:slug" element={<BlogDetailEdit />} />
           <Route path="blog/:slug/edit" element={<BlogDetailEdit />} />
           <Route path="author" element={<AuthorPage />} />

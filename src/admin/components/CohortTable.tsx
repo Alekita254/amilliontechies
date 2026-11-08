@@ -1,147 +1,260 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { ColumnDef } from "@tanstack/react-table";
+import { Briefcase, Pencil, Plus, RefreshCw, Search, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { apiDeleteRequest, apiGetRequest } from "@/backend/functions";
-import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { ConfirmDialog } from "./ConfirmDialog";
+import { EmptyState } from "./EmptyState";
+import { Pill } from "./Pill";
+
+type Status = "UPCOMING" | "ACTIVE" | "COMPLETED";
 
 type Cohort = {
   id: number;
   title: string;
   slug: string;
-  status: "UPCOMING" | "ACTIVE" | "COMPLETED";
+  status: Status;
   program_type?: string;
   learner_count?: number;
   mentor_count?: number;
-  start_date?: string;
-  end_date?: string;
+  start_date?: string | null;
+  end_date?: string | null;
   published?: boolean;
 };
 
-export function CohortTable({ refreshKey = 0 }: { refreshKey?: number }) {
+const STATUS: Record<Status, { label: string; tone: "blue" | "green" | "gray" }> = {
+  UPCOMING: { label: "Upcoming", tone: "blue" },
+  ACTIVE: { label: "Active", tone: "green" },
+  COMPLETED: { label: "Completed", tone: "gray" },
+};
+
+const FILTERS: { value: "ALL" | Status; label: string }[] = [
+  { value: "ALL", label: "All" },
+  { value: "ACTIVE", label: "Active" },
+  { value: "UPCOMING", label: "Upcoming" },
+  { value: "COMPLETED", label: "Completed" },
+];
+
+const fmt = (d?: string | null) =>
+  d ? new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : "";
+
+export function CohortTable({
+  refreshKey = 0,
+  onCreate,
+}: {
+  refreshKey?: number;
+  onCreate?: () => void;
+}) {
   const [cohorts, setCohorts] = useState<Cohort[]>([]);
-  const [filter, setFilter] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<"ALL" | Status>("ALL");
+  const [toDelete, setToDelete] = useState<Cohort | null>(null);
   const navigate = useNavigate();
 
-  const fetchCohorts = async () => {
-    const candidates = ["cohorts/", "public/cohorts/"];
-
-    for (const endpoint of candidates) {
-      const res = await apiGetRequest(endpoint);
-      const payload = res?.data;
-      const rows = Array.isArray(payload?.results)
-        ? payload.results
-        : Array.isArray(payload?.data)
-          ? payload.data
-          : Array.isArray(payload)
-            ? payload
-            : null;
-
-      if (rows) {
-        setCohorts(rows);
-        return;
-      }
-    }
-
-    toast.error("Failed to load cohorts");
-  };
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const res = await apiGetRequest("cohorts/");
+    const rows = res.data?.data;
+    if (Array.isArray(rows)) setCohorts(rows);
+    else setError(res.message || "Failed to load cohorts");
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    fetchCohorts();
-  }, [refreshKey]);
+    load();
+  }, [load, refreshKey]);
 
-  const handleDelete = async (slug: string) => {
-    if (!confirm("Delete this cohort?")) return;
-
-    const response = await apiDeleteRequest(`cohorts/${slug}/`);
-    if (response?.success) {
+  const remove = async () => {
+    if (!toDelete) return;
+    const res = await apiDeleteRequest(`cohorts/${toDelete.slug}/`);
+    if (res?.success) {
       toast.success("Cohort deleted");
-      setCohorts((prev) => prev.filter((item) => item.slug !== slug));
+      setCohorts((prev) => prev.filter((c) => c.slug !== toDelete.slug));
     } else {
-      toast.error(response?.message || "Failed to delete cohort");
+      toast.error(res?.message || "Failed to delete cohort");
     }
   };
 
-  const columns: ColumnDef<Cohort>[] = [
-    {
-      accessorKey: "title",
-      header: "Title",
-    },
-    {
-      accessorKey: "program_type",
-      header: "Program",
-      cell: ({ getValue }) => <span>{getValue<string>() || "-"}</span>,
-    },
-    {
-      accessorKey: "status",
-      header: "Status",
-    },
-    {
-      id: "counts",
-      header: "Learners / Mentors",
-      cell: ({ row }) => (
-        <span>
-          {row.original.learner_count ?? "-"} / {row.original.mentor_count ?? "-"}
-        </span>
-      ),
-    },
-    {
-      accessorKey: "published",
-      header: "Published",
-      cell: ({ getValue }) => (getValue<boolean>() ? "Yes" : "No"),
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => (
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate(`/admin/cohorts/${row.original.slug}/edit`)}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => handleDelete(row.original.slug)}
-          >
-            Delete
-          </Button>
-        </div>
-      ),
-    },
-  ];
+  const columns: ColumnDef<Cohort>[] = useMemo(
+    () => [
+      {
+        accessorKey: "title",
+        header: "Cohort",
+        cell: ({ row }) => (
+          <div className="min-w-0">
+            <p className="truncate font-medium">{row.original.title}</p>
+            <p className="truncate text-xs text-muted-foreground">
+              {row.original.program_type || "No program set"}
+            </p>
+          </div>
+        ),
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ getValue }) => {
+          const s = STATUS[getValue<Status>()];
+          return <Pill tone={s.tone}>{s.label}</Pill>;
+        },
+      },
+      {
+        id: "dates",
+        header: "Dates",
+        enableSorting: false,
+        cell: ({ row }) => {
+          const { start_date: s, end_date: e } = row.original;
+          return (
+            <span className="whitespace-nowrap text-sm text-muted-foreground">
+              {s || e ? `${fmt(s) || "—"} → ${fmt(e) || "—"}` : "Not scheduled"}
+            </span>
+          );
+        },
+      },
+      {
+        id: "people",
+        header: "Learners / Mentors",
+        enableSorting: false,
+        cell: ({ row }) => (
+          <span className="text-sm">
+            {row.original.learner_count ?? 0} <span className="text-muted-foreground">/</span>{" "}
+            {row.original.mentor_count ?? 0}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "published",
+        header: "Visibility",
+        cell: ({ getValue }) =>
+          getValue<boolean>() ? <Pill tone="green">Published</Pill> : <Pill tone="amber">Draft</Pill>,
+      },
+      {
+        id: "actions",
+        header: "",
+        enableSorting: false,
+        cell: ({ row }) => (
+          <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Edit"
+              onClick={() => navigate(`/admin/cohorts/${row.original.slug}/edit`)}
+            >
+              <Pencil className="h-4 w-4" />
+              <span className="sr-only">Edit</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Delete"
+              className="text-muted-foreground hover:text-destructive"
+              onClick={() => setToDelete(row.original)}
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="sr-only">Delete</span>
+            </Button>
+          </div>
+        ),
+      },
+    ],
+    [navigate]
+  );
 
-  const filtered = cohorts.filter((cohort) => {
-    const q = filter.toLowerCase();
-    return (
-      cohort.title?.toLowerCase().includes(q) ||
-      cohort.program_type?.toLowerCase().includes(q) ||
-      cohort.status?.toLowerCase().includes(q)
-    );
-  });
+  const q = search.trim().toLowerCase();
+  const filtered = cohorts.filter(
+    (c) =>
+      (status === "ALL" || c.status === status) &&
+      (!q || c.title?.toLowerCase().includes(q) || c.program_type?.toLowerCase().includes(q))
+  );
 
   return (
-    <Card className="mt-6">
-      <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <CardTitle>Cohorts</CardTitle>
+    <Card>
+      <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-1.5">
+          {FILTERS.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setStatus(f.value)}
+              className={cn(
+                "rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+                status === f.value
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+        <div className="relative sm:w-64">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search cohorts..."
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="max-w-sm"
+            placeholder="Search cohorts…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
           />
         </div>
-      </CardHeader>
-      <CardContent>
-        <DataTable columns={columns} data={filtered} />
-      </CardContent>
+      </div>
+
+      {loading ? (
+        <div className="space-y-3 p-4">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="h-14 animate-pulse rounded-lg bg-muted" />
+          ))}
+        </div>
+      ) : error ? (
+        <EmptyState
+          icon={<RefreshCw className="h-5 w-5" />}
+          title="Couldn't load cohorts"
+          text={error}
+          action={<Button variant="outline" onClick={load}>Try again</Button>}
+        />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={filtered}
+          onRowClick={(c) => navigate(`/admin/cohorts/${c.slug}/edit`)}
+          empty={
+            cohorts.length === 0 ? (
+              <EmptyState
+                icon={<Briefcase className="h-5 w-5" />}
+                title="No cohorts yet"
+                text="Create your first cohort to get started."
+                action={
+                  onCreate && (
+                    <Button onClick={onCreate}>
+                      <Plus className="mr-2 h-4 w-4" /> New cohort
+                    </Button>
+                  )
+                }
+              />
+            ) : (
+              <EmptyState
+                icon={<Search className="h-5 w-5" />}
+                title="No matching cohorts"
+                text="Try a different search or filter."
+              />
+            )
+          }
+        />
+      )}
+
+      <ConfirmDialog
+        open={!!toDelete}
+        title="Delete this cohort?"
+        description={toDelete ? `“${toDelete.title}” will be permanently removed.` : undefined}
+        onConfirm={remove}
+        onClose={() => setToDelete(null)}
+      />
     </Card>
   );
 }

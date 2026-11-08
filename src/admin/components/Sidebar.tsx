@@ -1,216 +1,131 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Briefcase,
-  Home,
-  Users,
-  Settings,
-  BarChart2,
-  HelpCircle,
-  Menu,
-  X,
-  UserCircle,
   FileText,
   Globe,
+  LayoutDashboard,
+  LogOut,
+  UserCircle,
   UserCog,
+  X,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
-export function Sidebar() {
-  const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [user, setUser] = useState<{
-    name: string;
-    email: string;
-    username: string;
-  } | null>(null);
+const navItems = [
+  { name: "Dashboard", icon: LayoutDashboard, href: "/admin", end: true },
+  { name: "Cohorts", icon: Briefcase, href: "/admin/cohorts" },
+  { name: "Blogs", icon: FileText, href: "/admin/blog" },
+  { name: "Authors", icon: UserCircle, href: "/admin/author" },
+  { name: "Community", icon: Globe, href: "/admin/community" },
+  { name: "Profile", icon: UserCog, href: "/admin/profile" },
+];
 
-  useEffect(() => {
-    // Handle resize
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+export const initialsOf = (name?: string) =>
+  (name || "U")
+    .split(/\s+/)
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
+function Panel({ onNavigate }: { onNavigate?: () => void }) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-    // Get user info from localStorage
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
-        setUser(null);
-      }
-    }
-
-    // Cleanup
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  const navItems = [
-    { name: "Dashboard", icon: Home, href: "/admin" },
-    { name: "Cohorts", icon: Briefcase, href: "/admin/cohorts" },
-    { name: "Blogs", icon: FileText, href: "/admin/blog" },
-    { name: "Author", icon: UserCircle, href: "/admin/author" },
-    { name: "Community", icon: Globe, href: "/admin/community" },
-    { name: "Profile", icon: UserCog, href: "/admin/profile" },
-  ];
-
-  const secondaryItems = [
-    { name: "Settings", icon: Settings, href: "/admin/settings" },
-    { name: "Help", icon: HelpCircle, href: "/admin/help" },
-  ];
-
-  const isActive = (href: string) => {
-    return (
-      location.pathname === href ||
-      (href !== "/" && location.pathname.startsWith(href))
-    );
+  const handleLogout = () => {
+    logout();
+    navigate("/admin/login");
   };
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
-
-  // Navigation Item Component
-  const NavItem = ({ item }: { item: (typeof navItems)[0] }) => (
-    <a
-      href={item.href}
-      className={`group flex items-center px-2 py-3 text-sm font-medium rounded-md transition-colors duration-200 ${
-        isActive(item.href)
-          ? "bg-green-100 text-green-700"
-          : "text-gray-600 hover:text-green-600 hover:bg-green-50"
-      }`}
-      onClick={() => setIsOpen(false)}
-    >
-      <item.icon
-        className={`mr-3 h-5 w-5 ${
-          isActive(item.href)
-            ? "text-green-500"
-            : "text-gray-500 group-hover:text-green-500"
-        }`}
-      />
-      {item.name}
-    </a>
-  );
-
-  // Desktop Sidebar
-  const DesktopSidebar = () => (
-    <div className="hidden md:flex md:flex-shrink-0">
-      <div className="flex flex-col w-64 border-r border-gray-200 bg-white h-screen sticky top-0">
-        <div className="h-0 flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-          <div className="flex items-center justify-center px-4">
-            <h1 className="text-xl font-bold text-green-600">Admin Panel</h1>
-          </div>
-
-          <nav className="mt-8 flex-1 px-2 space-y-1">
-            {navItems.map((item) => (
-              <NavItem key={item.href} item={item} />
-            ))}
-          </nav>
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex h-16 items-center gap-3 px-5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">
+          M
         </div>
+        <div className="leading-tight">
+          <p className="text-sm font-semibold">A Million Techies</p>
+          <p className="text-xs text-muted-foreground">Admin</p>
+        </div>
+      </div>
 
-        <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-          <div className="flex items-center w-full">
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-700">{ user?.username || 'User' }</p>
-              <a
-                href="/admin/profile"
-                className={`text-xs font-medium ${
-                  isActive("/admin/profile")
-                    ? "text-green-600"
-                    : "text-gray-500 hover:text-green-600"
-                } transition-colors duration-200`}
-              >
-                View profile
-              </a>
-            </div>
+      <nav className="flex-1 space-y-1 px-3 py-4">
+        {navItems.map(({ name, icon: Icon, href, end }) => (
+          <NavLink
+            key={href}
+            to={href}
+            end={end}
+            onClick={onNavigate}
+            className={({ isActive }) =>
+              cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                isActive
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )
+            }
+          >
+            <Icon className="h-[18px] w-[18px]" />
+            {name}
+          </NavLink>
+        ))}
+      </nav>
+
+      <div className="border-t p-3">
+        <div className="flex items-center gap-3 rounded-lg p-2">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+            {initialsOf(user?.name)}
           </div>
+          <div className="min-w-0 flex-1 leading-tight">
+            <p className="truncate text-sm font-medium">{user?.name || "User"}</p>
+            <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            title="Log out"
+            className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="sr-only">Log out</span>
+          </button>
         </div>
       </div>
     </div>
   );
+}
 
-  // Mobile Drawer
-  const MobileDrawer = () => (
-    <>
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
-
-      {/* Drawer */}
-      <div
-        className={`fixed inset-y-0 left-0 transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:hidden z-30 w-64 transition-transform duration-300 ease-in-out`}
-      >
-        <div className="flex flex-col w-64 border-r border-gray-200 bg-white h-full">
-          <div className="flex items-center justify-between px-4 pt-5 pb-2">
-            <h1 className="text-xl font-bold text-green-600">Admin Panel</h1>
-            <button
-              onClick={toggleSidebar}
-              className="p-1 rounded-md text-gray-500 hover:text-gray-700 focus:outline-none"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-
-          <div className="h-0 flex-1 flex flex-col overflow-y-auto">
-            <nav className="mt-4 flex-1 px-2 space-y-1">
-              {navItems.map((item) => (
-                <NavItem key={item.href} item={item} />
-              ))}
-            </nav>
-
-            <div className="px-2 py-4 space-y-1">
-              {secondaryItems.map((item) => (
-                <NavItem key={item.href} item={item} />
-              ))}
-            </div>
-          </div>
-
-          <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-            <div className="flex items-center w-full">
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-700">{ user?.username || 'User' }</p>
-                <a
-                  href="/admin/profile"
-                  className={`text-xs font-medium ${
-                    isActive("/admin/profile")
-                      ? "text-green-600"
-                      : "text-gray-500 hover:text-green-600"
-                  } transition-colors duration-200`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  View profile
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-
+export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
     <>
-      {/* Mobile menu button */}
-      <div className="md:hidden fixed top-4 left-4 z-10">
-        <button
-          onClick={toggleSidebar}
-          className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
-      </div>
+      {/* Desktop */}
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r bg-card md:block">
+        <Panel />
+      </aside>
 
-      <DesktopSidebar />
-      <MobileDrawer />
+      {/* Mobile drawer */}
+      <div
+        className={cn(
+          "fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden",
+          open ? "opacity-100" : "pointer-events-none opacity-0"
+        )}
+        onClick={onClose}
+      />
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-64 border-r bg-card transition-transform duration-200 md:hidden",
+          open ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <button
+          onClick={onClose}
+          className="absolute right-3 top-4 rounded-md p-1 text-muted-foreground hover:text-foreground"
+        >
+          <X className="h-5 w-5" />
+          <span className="sr-only">Close menu</span>
+        </button>
+        <Panel onNavigate={onClose} />
+      </aside>
     </>
   );
 }
