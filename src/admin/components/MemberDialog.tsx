@@ -29,6 +29,12 @@ const blank: Form = {
   headline: "", about: "", expertise: "", linkedin: "", show_publicly: false, admin_note: "",
 };
 
+// Only the editable fields go into the form (and so into the PATCH); a member also carries
+// read-only data such as id, dates and the current mentor, which must not be sent back.
+const FORM_KEYS = Object.keys(blank) as (keyof Form)[];
+const fromMember = (m: Member): Form =>
+  Object.fromEntries(FORM_KEYS.map((k) => [k, m[k as keyof Member] ?? blank[k]])) as Form;
+
 const fmt = (d?: string | null) =>
   d ? new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : "";
 
@@ -45,7 +51,7 @@ export function MemberDialog({
   onSaved: () => void;
 }) {
   const isEdit = !!member;
-  const [form, setForm] = useState<Form>(member ? { ...blank, ...member } : blank);
+  const [form, setForm] = useState<Form>(member ? fromMember(member) : blank);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

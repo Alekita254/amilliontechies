@@ -50,7 +50,7 @@ function Field({
 
 export function CohortRegistration({ cohort }: { cohort: RegistrableCohort }) {
   const [open, setOpen] = useState(false);
-  const [role, setRole] = useState<Role>("MENTEE");
+  const [chosenRole, setChosenRole] = useState<Role>("MENTEE");
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
@@ -58,11 +58,14 @@ export function CohortRegistration({ cohort }: { cohort: RegistrableCohort }) {
   const [done, setDone] = useState(false);
 
   const state = cohort.registration_state ?? "closed";
+  // Mentee seats are capped but mentors are not, so a full cohort still takes mentor applications.
+  const menteesFull = state === "full";
+  const role: Role = menteesFull ? "MENTOR" : chosenRole;
 
-  if (state !== "open") {
+  if (state === "closed") {
     return (
       <Button disabled variant="outline">
-        {state === "full" ? "This cohort is full" : "Registration is closed"}
+        Registration is closed
       </Button>
     );
   }
@@ -103,7 +106,7 @@ export function CohortRegistration({ cohort }: { cohort: RegistrableCohort }) {
     if (!next && done) {
       setDone(false);
       setForm(EMPTY);
-      setRole("MENTEE");
+      setChosenRole("MENTEE");
     }
   };
 
@@ -113,7 +116,10 @@ export function CohortRegistration({ cohort }: { cohort: RegistrableCohort }) {
     <>
       <div className="flex flex-col items-start gap-1">
         <Button onClick={() => setOpen(true)}>Register</Button>
-        {cohort.seats_left != null && (
+        {menteesFull && (
+          <span className="text-xs text-muted-foreground">Mentee seats are full. Mentors can still apply.</span>
+        )}
+        {!menteesFull && cohort.seats_left != null && (
           <span className="text-xs text-muted-foreground">
             {cohort.seats_left} {cohort.seats_left === 1 ? "seat" : "seats"} left
           </span>
@@ -145,9 +151,11 @@ export function CohortRegistration({ cohort }: { cohort: RegistrableCohort }) {
                       key={r}
                       type="button"
                       aria-pressed={role === r}
-                      onClick={() => setRole(r)}
+                      disabled={menteesFull && r === "MENTEE"}
+                      title={menteesFull && r === "MENTEE" ? "Mentee seats are full" : undefined}
+                      onClick={() => setChosenRole(r)}
                       className={cn(
-                        "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                        "rounded-md px-3 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50",
                         role === r ? "bg-background shadow-sm" : "text-muted-foreground hover:text-foreground"
                       )}
                     >
@@ -186,8 +194,17 @@ export function CohortRegistration({ cohort }: { cohort: RegistrableCohort }) {
 
                 {/* Honeypot: hidden from people, tempting to bots. */}
                 <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-                  <label htmlFor="website">Website</label>
-                  <input id="website" name="website" tabIndex={-1} autoComplete="off" value={form.website} onChange={onChange} />
+                  {/* Deliberately not named "website": browsers autofill that, which would drop real applicants. */}
+                  <label htmlFor="hp_extra">Leave this field empty</label>
+                  <input
+                    id="hp_extra"
+                    name="hp_extra"
+                    data-honeypot
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={form.website}
+                    onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))}
+                  />
                 </div>
 
                 <label className="flex cursor-pointer items-start gap-3 rounded-lg border p-3 text-sm">
