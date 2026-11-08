@@ -99,7 +99,7 @@ const BlogComments = ({ postId }: { postId: number }) => {
         try {
             const response = await apiGetRequest(`comments/blog/${postId}/`);
             if (response.data) {
-                const commentsData = Array.isArray(response.data.data) ? response.data.data : [response.data.data];
+                const commentsData: Comment[] = response.data.data?.comments ?? [];
                 const flattenComments = (comments: Comment[]): Comment[] => {
                     return comments.reduce((acc, comment) => {
                         acc.push(comment);

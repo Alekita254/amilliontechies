@@ -1,5 +1,11 @@
 import { API_URL } from "./names";
 
+// The API treats an expired/invalid token as anonymous on public endpoints.
+const authHeader = () => {
+  const token = localStorage.getItem("accessToken");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 export const apiPostRequest = async (endpoint, data) => {
   try {
     const url = `${API_URL}/${endpoint}`;
@@ -8,6 +14,7 @@ export const apiPostRequest = async (endpoint, data) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        ...authHeader(),
       },
       body: JSON.stringify(data),
     });
@@ -34,6 +41,7 @@ export const apiGetRequest = async (endpoint) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        ...authHeader(),
       },
     });
 

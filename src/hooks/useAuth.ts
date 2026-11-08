@@ -9,71 +9,31 @@ export type User = {
   };
   
 
-export function useAuth() {
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Check authentication status when component mounts
-    const checkAuth = async () => {
-      try {
-        // Replace this with your actual authentication check
-        const token = localStorage.getItem('authToken');
-        if (token) {
-          // Verify token with your backend
-          // const response = await verifyToken(token);
-          // setUser(response.user);
-          // setIsAuthenticated(true);
-          
-          // Temporary mock data
-          setUser({
-            id: '1',
-            name: 'Admin User',
-            email: 'admin@amilliontechies.com',
-            role: 'admin'
-          });
-          setIsAuthenticated(true);
-        }
-      } catch (error) {
-        console.error('Authentication check failed:', error);
-      } finally {
-        setLoading(false);
-      }
+function readSession(): User | null {
+  try {
+    const token = localStorage.getItem('accessToken');
+    const raw = localStorage.getItem('user');
+    if (!token || !raw) return null;
+    const u = JSON.parse(raw);
+    // Display/routing only; the backend enforces access via the JWT.
+    return {
+      id: String(u.id),
+      name: `${u.first_name ?? ''} ${u.last_name ?? ''}`.trim() || u.username,
+      email: u.email,
+      role: u.is_staff ? 'admin' : 'user',
     };
+  } catch {
+    return null;
+  }
+}
 
-    checkAuth();
-  }, []);
-
-  const login = async (email: string, password: string) => {
-    // Implement your login logic here
-    // const response = await authService.login(email, password);
-    // setUser(response.user);
-    // setIsAuthenticated(true);
-    // return response;
-    
-    // Temporary mock login
-    setUser({
-      id: '1',
-      name: 'Admin User',
-      email: email,
-      role: 'admin'
-    });
-    setIsAuthenticated(true);
-    return { success: true };
-  };
+export function useAuth() {
+  const [user, setUser] = useState<User | null>(readSession);
 
   const logout = () => {
-    localStorage.removeItem('authToken');
+    ['accessToken', 'refreshToken', 'user'].forEach((k) => localStorage.removeItem(k));
     setUser(null);
-    setIsAuthenticated(false);
   };
 
-  return {
-    user,
-    isAuthenticated,
-    loading,
-    login,
-    logout
-  };
+  return { user, isAuthenticated: !!user, loading: false, logout };
 }
