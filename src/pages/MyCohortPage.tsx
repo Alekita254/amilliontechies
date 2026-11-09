@@ -133,7 +133,8 @@ export function MyCohortPage() {
         })
       )}
 
-      {editing && <MemberProfileDialog key={editing.id} membership={editing} onClose={() => setEditing(null)} onSaved={saved} />}
+      {editing && <MemberProfileDialog key={editing.id} membership={editing} onClose={() => setEditing(null)} onSaved={saved}
+          onSessionLost={() => navigate("/signin", { replace: true })} />}
     </main>
   );
 }

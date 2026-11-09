@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { apiPatchRequest } from "@/backend/functions";
+import { hasSession } from "@/lib/session";
 
 export interface MemberProfile {
   full_name: string;
@@ -55,10 +56,12 @@ export function MemberProfileDialog({
   membership,
   onClose,
   onSaved,
+  onSessionLost,
 }: {
   membership: MyMembership;
   onClose: () => void;
   onSaved: (updated: MyMembership) => void;
+  onSessionLost: () => void;
 }) {
   const [form, setForm] = useState<MemberProfile>(membership.profile);
   const [saving, setSaving] = useState(false);
@@ -80,6 +83,10 @@ export function MemberProfileDialog({
       toast.success("Profile updated");
       onSaved(res.data);
     } catch (err: any) {
+      if (!hasSession()) {
+        onSessionLost(); // the session ended while editing; the API helper has already cleared it
+        return;
+      }
       setError(err?.message || "We couldn't save your profile.");
     } finally {
       setSaving(false);

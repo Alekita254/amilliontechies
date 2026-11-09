@@ -64,9 +64,9 @@ export const Navbar = () => {
   // Re-read on every route change, so it updates right after signing in or out.
   const account: RouteProps = !hasSession()
     ? { href: "/signin", label: "Sign in" }
-    : getStoredUser()?.is_staff
-      ? { href: "/admin", label: "Dashboard" }
-      : { href: "/my-cohort", label: "My cohort" };
+    : getStoredUser()?.is_staff === false // same rule as the admin guard: only a known non-staff user is a member
+      ? { href: "/my-cohort", label: "My cohort" }
+      : { href: "/admin", label: "Dashboard" };
 
   const navLinkClassName = (
     isActive: boolean,
