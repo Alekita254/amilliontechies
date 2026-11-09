@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./mode-toggle";
 import { buttonVariants } from "./ui/button";
+import { getStoredUser, hasSession } from "@/lib/session";
 
 interface RouteProps {
   href: string;
@@ -59,6 +60,13 @@ export const Navbar = () => {
     (item) => item.href.startsWith("/") && isActivePath(item.href)
   );
   const isCommunityActive = communityList.some((item) => isActivePath(item.href));
+
+  // Re-read on every route change, so it updates right after signing in or out.
+  const account: RouteProps = !hasSession()
+    ? { href: "/signin", label: "Sign in" }
+    : getStoredUser()?.is_staff
+      ? { href: "/admin", label: "Dashboard" }
+      : { href: "/my-cohort", label: "My cohort" };
 
   const navLinkClassName = (
     isActive: boolean,
@@ -176,6 +184,7 @@ export const Navbar = () => {
                   </ul>
                 </details>
 
+                <MobileNavLink {...account} />
                 <MobileNavLink href="/join-us" label="Join Us" cta />
                 <div className="pt-2">
                   <ModeToggle />
@@ -246,6 +255,7 @@ export const Navbar = () => {
             )}
           </div>
 
+          <DesktopNavLink {...account} />
           <DesktopNavLink href="/join-us" label="Join Us" cta />
           <ModeToggle />
         </nav>

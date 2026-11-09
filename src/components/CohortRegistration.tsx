@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -135,6 +136,9 @@ export function CohortRegistration({ cohort }: { cohort: RegistrableCohort }) {
               <DialogDescription>
                 We've received your application for {cohort.title}. We'll email you at {form.email} once it has been reviewed.
               </DialogDescription>
+              <p className="text-sm text-muted-foreground">
+                You can <Link to="/signin" className="text-primary hover:underline">sign in</Link> with this email at any time to check on your application.
+              </p>
               <Button onClick={() => close(false)}>Close</Button>
             </div>
           ) : (
