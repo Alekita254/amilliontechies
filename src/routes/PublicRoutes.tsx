@@ -25,6 +25,7 @@ import { EventsPage } from "@/pages/EventsPage";
 import { EventDetailPage } from "@/pages/EventDetailPage";
 import { SignInPage } from "@/pages/SignInPage";
 import { SignInVerifyPage } from "@/pages/SignInVerifyPage";
+import { MyCohortPage } from "@/pages/MyCohortPage";
 
 const Layout = ({ children }) => {
   return (
@@ -46,6 +47,7 @@ export function PublicRoutes() {
         <Route path="/about" element={<Layout><AboutPage /></Layout>} />
         <Route path="/signin" element={<Layout><SignInPage /></Layout>} />
         <Route path="/signin/verify" element={<Layout><SignInVerifyPage /></Layout>} />
+        <Route path="/my-cohort" element={<Layout><MyCohortPage /></Layout>} />
         <Route path="/cohorts" element={<Layout><CohortsPage /></Layout>} />
         <Route path="/cohorts/:slug" element={<Layout><CohortDetailPage /></Layout>} />
         <Route path="/cohorts/:slug/mentees" element={<Layout><CohortMenteesPage /></Layout>} />
