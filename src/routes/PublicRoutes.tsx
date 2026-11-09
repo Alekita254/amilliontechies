@@ -23,6 +23,8 @@ import { ProjectsPage } from "@/pages/ProjectsPage";
 import { ProjectDetailPage } from "@/pages/ProjectDetailPage";
 import { EventsPage } from "@/pages/EventsPage";
 import { EventDetailPage } from "@/pages/EventDetailPage";
+import { SignInPage } from "@/pages/SignInPage";
+import { SignInVerifyPage } from "@/pages/SignInVerifyPage";
 
 const Layout = ({ children }) => {
   return (
@@ -42,6 +44,8 @@ export function PublicRoutes() {
       <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/about" element={<Layout><AboutPage /></Layout>} />
+        <Route path="/signin" element={<Layout><SignInPage /></Layout>} />
+        <Route path="/signin/verify" element={<Layout><SignInVerifyPage /></Layout>} />
         <Route path="/cohorts" element={<Layout><CohortsPage /></Layout>} />
         <Route path="/cohorts/:slug" element={<Layout><CohortDetailPage /></Layout>} />
         <Route path="/cohorts/:slug/mentees" element={<Layout><CohortMenteesPage /></Layout>} />
